@@ -1,18 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { UserRepositoryImpl } from '../../infrastructure/UserRepositoryImpl';
 
-const userSchema = z.object({
-    name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
-    email: z.string().email('E-mail inválido'),
-    phone: z.string().optional(),
-    isAdmin: z.boolean(),
-});
-
-type UserFormValues = z.infer<typeof userSchema>;
+import { userSchema, type UserFormValues } from '../schemas/user.schema';
 
 export function CadastroUsuarioPage() {
     const navigate = useNavigate();

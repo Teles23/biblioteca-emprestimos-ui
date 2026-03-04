@@ -6,7 +6,6 @@ export function useLoans() {
     const [loans, setLoans] = useState<Loan[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
 
     const repository = new LoanRepositoryImpl();
 

@@ -1,17 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../shared/contexts/AuthContext';
+import { loginSchema, type LoginFormValues } from '../schemas/auth.schema';
 import { useState } from 'react';
-
-const loginSchema = z.object({
-    email: z.string().email('E-mail inválido'),
-    password: z.string().min(1, 'Senha é obrigatória'),
-    remember: z.boolean().optional(),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
     const { login } = useAuth();
@@ -25,18 +17,13 @@ export function LoginPage() {
         formState: { errors },
     } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: 'admin@biblioteca.com',
-            password: '',
-            remember: true,
-        }
     });
 
     const onSubmit = async (data: LoginFormValues) => {
         try {
             setError(null);
             setLoading(true);
-            await login({ email: data.email, password: data.password });
+            await login(data);
             navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
@@ -49,7 +36,6 @@ export function LoginPage() {
         <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
             {/* PAINEL ESQUERDO */}
             <div className="hidden lg:flex bg-sidebar-bg flex-col justify-center items-center p-16 relative overflow-hidden">
-                {/* Decorativo */}
                 <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(232,168,56,0.12)_0%,transparent_70%)] -top-[100px] -left-[100px]" />
 
                 <div className="relative z-10 max-w-[380px] w-full">
@@ -67,25 +53,26 @@ export function LoginPage() {
 
                     <div className="mb-10">
                         <h2 className="text-[32px] font-extrabold text-white tracking-tighter leading-[1.15] mb-3.5">
-                            Gerencie sua biblioteca com precisão
+                            Gestão de acervo de forma inteligente.
                         </h2>
                         <p className="text-[14px] text-sidebar-text leading-relaxed">
-                            Controle completo de acervo, empréstimos, devoluções e histórico de leitores em um só lugar.
+                            A plataforma definitiva para controle de livros, leitores e empréstimos com foco em produtividade.
                         </p>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        {[
-                            'Cadastro e gestão de livros e autores',
-                            'Controle de empréstimos e devoluções',
-                            'Alertas de atraso automáticos',
-                            'Histórico completo por leitor'
-                        ].map((feature, i) => (
-                            <div key={i} className="flex items-center gap-2.5 text-[13px] text-sidebar-text">
-                                <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-                                {feature}
-                            </div>
-                        ))}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-4 text-sidebar-text text-[13px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            Controle total de exemplares e autores
+                        </div>
+                        <div className="flex items-center gap-4 text-sidebar-text text-[13px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            Relatórios detalhados de atrasos
+                        </div>
+                        <div className="flex items-center gap-4 text-sidebar-text text-[13px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            Interface moderna e intuitiva
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,10 +81,10 @@ export function LoginPage() {
             <div className="flex items-center justify-center p-8 lg:p-16 bg-surface-2 font-sans">
                 <div className="bg-surface rounded-lg border border-border shadow-lg p-10 w-full max-w-[420px]">
                     <h1 className="text-[22px] font-extrabold tracking-tight mb-1">
-                        Bem-vindo de volta 👋
+                        Bem-vindo de volta! 👋
                     </h1>
                     <p className="text-[13px] text-text-secondary mb-[30px]">
-                        Faça login para acessar o painel administrativo
+                        Acesse sua conta para gerenciar a biblioteca
                     </p>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -112,9 +99,8 @@ export function LoginPage() {
                                 <input
                                     {...register('email')}
                                     type="email"
-                                    placeholder="admin@biblioteca.com"
-                                    className={`pl-[34px] p-2.5 border-1.5 border-border rounded-sm text-[13.5px] w-full outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(232,168,56,0.12)] ${errors.email ? 'border-danger' : ''
-                                        }`}
+                                    placeholder="seu@email.com"
+                                    className={`pl-[34px] p-2.5 border-1.5 border-border rounded-sm text-[13.5px] w-full outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(232,168,56,0.12)] ${errors.email ? 'border-danger' : ''}`}
                                 />
                             </div>
                             {errors.email && (
@@ -123,9 +109,12 @@ export function LoginPage() {
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-[12px] font-semibold text-text-primary tracking-wide">
-                                Senha
-                            </label>
+                            <div className="flex items-center justify-between">
+                                <label className="text-[12px] font-semibold text-text-primary tracking-wide">
+                                    Senha
+                                </label>
+                                <a href="#" className="text-[11px] text-accent-dark font-bold hover:underline">Esqueceu a senha?</a>
+                            </div>
                             <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[14px] pointer-events-none">
                                     🔒
@@ -134,53 +123,36 @@ export function LoginPage() {
                                     {...register('password')}
                                     type="password"
                                     placeholder="••••••••"
-                                    className={`pl-[34px] p-2.5 border-1.5 border-border rounded-sm text-[13.5px] w-full outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(232,168,56,0.12)] ${errors.password ? 'border-danger' : ''
-                                        }`}
+                                    className={`pl-[34px] p-2.5 border-1.5 border-border rounded-sm text-[13.5px] w-full outline-none transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(232,168,56,0.12)] ${errors.password ? 'border-danger' : ''}`}
                                 />
                             </div>
                             {errors.password && (
                                 <span className="text-[11px] text-danger font-medium">{errors.password.message}</span>
                             )}
-                            <div className="text-[11px] text-text-muted mt-0.5">
-                                Esqueceu a senha? <a href="#" className="text-accent-dark font-bold hover:underline">Recuperar acesso</a>
-                            </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <input
-                                {...register('remember')}
-                                type="checkbox"
-                                id="remember"
-                                className="w-4 h-4 rounded border-border text-accent focus:ring-accent"
-                            />
-                            <label htmlFor="remember" className="text-[13px] text-text-secondary cursor-pointer">
-                                Manter conectado
-                            </label>
+                        <div className="flex items-center gap-2 pt-1">
+                            <input type="checkbox" id="remember" className="w-3.5 h-3.5 accent-accent" />
+                            <label htmlFor="remember" className="text-[12px] text-text-secondary font-medium cursor-pointer">Lembrar de mim</label>
                         </div>
 
-                        {error && (
-                            <div className="bg-danger-soft border border-danger/20 text-danger text-[13px] p-3 rounded-sm font-medium">
-                                ⚠️ {error}
-                            </div>
-                        )}
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
-                        >
-                            {loading ? 'Entrando...' : 'Entrar no sistema →'}
-                        </button>
-
-                        <div className="relative flex items-center justify-center py-2">
-                            <div className="absolute w-full border-t border-border" />
-                            <span className="relative bg-surface px-3 text-[12px] text-text-muted uppercase tracking-widest font-medium">
-                                ou
-                            </span>
+                        <div className="pt-2">
+                            {error && (
+                                <div className="bg-danger-soft border border-danger/20 text-danger text-[13px] p-3 rounded-sm font-medium mb-4">
+                                    ⚠️ {error}
+                                </div>
+                            )}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                            >
+                                {loading ? 'Entrando...' : 'Entrar no sistema →'}
+                            </button>
                         </div>
 
-                        <div className="text-center text-[13px] text-text-primary">
-                            Não tem conta? <Link to="/register" className="text-accent-dark font-bold hover:underline">Criar conta agora</Link>
+                        <div className="text-center text-[13px] text-text-primary pt-4">
+                            Novo por aqui? <Link to="/register" className="text-accent-dark font-bold hover:underline">Crie uma conta</Link>
                         </div>
                     </form>
                 </div>

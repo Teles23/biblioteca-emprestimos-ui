@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { BookRepositoryImpl } from '../../infrastructure/BookRepositoryImpl';
@@ -8,16 +7,7 @@ import { AuthorRepositoryImpl } from '../../../authors/infrastructure/AuthorRepo
 import { CategoryRepositoryImpl } from '../../../categories/infrastructure/CategoryRepositoryImpl';
 import type { Author, Category } from '../../../../shared/types';
 
-const bookSchema = z.object({
-    title: z.string().min(3, 'Título deve ter no mínimo 3 caracteres'),
-    publicationYear: z.number()
-        .min(1500, 'Ano inválido')
-        .max(new Date().getFullYear() + 1, 'Ano futuro não permitido'),
-    categoryId: z.string().min(1, 'Selecione uma categoria'),
-    authorIds: z.array(z.string()).min(1, 'Selecione pelo menos um autor'),
-});
-
-type BookFormValues = z.infer<typeof bookSchema>;
+import { bookSchema, type BookFormValues } from '../schemas/book.schema';
 
 export function CadastroLivroPage() {
     const { id } = useParams();

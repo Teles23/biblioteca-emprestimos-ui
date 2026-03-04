@@ -1,4 +1,3 @@
-import { useLoans } from '../hooks/useLoans';
 import { useEffect, useState } from 'react';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import type { Loan } from '../../../../shared/types';
@@ -6,6 +5,7 @@ import type { Loan } from '../../../../shared/types';
 export function HistoricoPage() {
     const [history, setHistory] = useState<Loan[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const repository = new LoanRepositoryImpl();
 
@@ -34,6 +34,12 @@ export function HistoricoPage() {
                     Registro completo de todos os empréstimos realizados e finalizados.
                 </p>
             </div>
+
+            {error && (
+                <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-sm mb-6 text-[13px]">
+                    ⚠️ {error}
+                </div>
+            )}
 
             <div className="bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
                 <table className="w-full text-left border-collapse">
