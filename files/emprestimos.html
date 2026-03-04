@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empréstimos — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+  <style>
+    .overdue-row { background: rgba(239,68,68,0.03) !important; }
+    .overdue-row:hover { background: rgba(239,68,68,0.06) !important; }
+    .date-overdue { color: var(--danger); font-weight: 600; }
+  </style>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Empréstimos</h1>
+      <p>Controle de livros emprestados e devoluções</p>
+    </div>
+    <a href="registrar-emprestimo.html" class="btn btn-primary">+ Registrar Empréstimo</a>
+  </div>
+
+  <!-- MINI STATS -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:40px;height:40px;background:var(--info-soft);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px">📖</div>
+      <div>
+        <div style="font-size:22px;font-weight:750;font-family:'JetBrains Mono',monospace;color:var(--text-primary)">47</div>
+        <div style="font-size:12px;color:var(--text-secondary)">Empréstimos Ativos</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:40px;height:40px;background:var(--warning-soft);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px">⏳</div>
+      <div>
+        <div style="font-size:22px;font-weight:750;font-family:'JetBrains Mono',monospace;color:var(--text-primary)">5</div>
+        <div style="font-size:12px;color:var(--text-secondary)">Vencem Hoje</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px">
+      <div style="width:40px;height:40px;background:var(--danger-soft);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px">⚠️</div>
+      <div>
+        <div style="font-size:22px;font-weight:750;font-family:'JetBrains Mono',monospace;color:var(--danger)">3</div>
+        <div style="font-size:12px;color:var(--text-secondary)">Em Atraso</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-search">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar por livro ou usuário...">
+    </div>
+    <div class="toolbar-filters">
+      <select class="filter-select">
+        <option>Todos os status</option>
+        <option>Ativos</option>
+        <option>Em atraso</option>
+        <option>Devolvidos</option>
+      </select>
+      <select class="filter-select">
+        <option>Todos os usuários</option>
+        <option>Maria Oliveira</option>
+        <option>Carlos Santos</option>
+        <option>Pedro Alves</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Livro</th>
+          <th>Usuário</th>
+          <th>Data Empréstimo</th>
+          <th>Devolução Prevista</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="overdue-row">
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#047</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">📖</div>
+              <div class="book-cell-title">Memórias Póstumas</div>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e);width:24px;height:24px;font-size:9px">FC</div>
+              Fernanda Costa
+            </div>
+          </td>
+          <td>18/01/2024</td>
+          <td class="date-overdue">01/02/2024 <span style="font-size:11px">(7 dias)</span></td>
+          <td><span class="badge badge-danger">● Atrasado</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-primary btn-sm">↩ Devolver</button>
+            </div>
+          </td>
+        </tr>
+        <tr class="overdue-row">
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#046</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">📖</div>
+              <div class="book-cell-title">Dom Casmurro</div>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444);width:24px;height:24px;font-size:9px">PA</div>
+              Pedro Alves
+            </div>
+          </td>
+          <td>22/01/2024</td>
+          <td class="date-overdue">05/02/2024 <span style="font-size:11px">(3 dias)</span></td>
+          <td><span class="badge badge-danger">● Atrasado</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-primary btn-sm">↩ Devolver</button>
+            </div>
+          </td>
+        </tr>
+        <tr class="overdue-row">
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#044</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#14b8a6,#22c55e)">📖</div>
+              <div class="book-cell-title">A Hora da Estrela</div>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#14b8a6,#22c55e);width:24px;height:24px;font-size:9px">RM</div>
+              Rafael Mendes
+            </div>
+          </td>
+          <td>24/01/2024</td>
+          <td class="date-overdue">07/02/2024 <span style="font-size:11px">(1 dia)</span></td>
+          <td><span class="badge badge-danger">● Atrasado</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-primary btn-sm">↩ Devolver</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#045</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">📖</div>
+              <div class="book-cell-title">1984</div>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#3b82f6,#6366f1);width:24px;height:24px;font-size:9px">CS</div>
+              Carlos Santos
+            </div>
+          </td>
+          <td>25/01/2024</td>
+          <td>08/02/2024</td>
+          <td><span class="badge badge-warning">● Ativo</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-primary btn-sm">↩ Devolver</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#043</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">📖</div>
+              <div class="book-cell-title">O Hobbit</div>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e);width:24px;height:24px;font-size:9px">MO</div>
+              Maria Oliveira
+            </div>
+          </td>
+          <td>26/01/2024</td>
+          <td>09/02/2024</td>
+          <td><span class="badge badge-warning">● Ativo</span></td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn btn-primary btn-sm">↩ Devolver</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Mostrando 1–5 de 47 empréstimos ativos</div>
+      <div class="pagination-pages">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <a href="#" class="page-btn">›</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('emprestimos', 'Empréstimos', 'Empréstimos');</script>
+</body>
+</html>

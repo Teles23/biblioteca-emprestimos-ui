@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autores — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Autores</h1>
+      <p>Gerencie os autores do acervo</p>
+    </div>
+    <a href="cadastro-autor.html" class="btn btn-primary">+ Cadastrar Autor</a>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-search">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar por nome do autor...">
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-secondary btn-sm">⬇ Exportar</button>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Autor</th>
+          <th>Biografia</th>
+          <th>Livros Associados</th>
+          <th>Cadastrado em</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">GO</div>
+              <div>
+                <div class="user-cell-name">George Orwell</div>
+                <div class="user-cell-email">1903 – 1950</div>
+              </div>
+            </div>
+          </td>
+          <td style="max-width:280px;color:var(--text-secondary);font-size:12.5px">Escritor e jornalista inglês, famoso pelas obras 1984 e A Revolução dos Bichos...</td>
+          <td><span class="badge badge-info">3 livros</span></td>
+          <td>15/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-autor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">MA</div>
+              <div>
+                <div class="user-cell-name">Machado de Assis</div>
+                <div class="user-cell-email">1839 – 1908</div>
+              </div>
+            </div>
+          </td>
+          <td style="max-width:280px;color:var(--text-secondary);font-size:12.5px">Considerado o maior escritor da literatura brasileira, fundador da Academia Brasileira de Letras...</td>
+          <td><span class="badge badge-info">7 livros</span></td>
+          <td>15/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-autor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed" title="Possui livros associados">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#14b8a6,#22c55e)">CL</div>
+              <div>
+                <div class="user-cell-name">Clarice Lispector</div>
+                <div class="user-cell-email">1920 – 1977</div>
+              </div>
+            </div>
+          </td>
+          <td style="max-width:280px;color:var(--text-secondary);font-size:12.5px">Escritora brasileira de origem ucraniana, considerada uma das maiores escritoras do século XX...</td>
+          <td><span class="badge badge-info">5 livros</span></td>
+          <td>20/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-autor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">YH</div>
+              <div>
+                <div class="user-cell-name">Yuval Noah Harari</div>
+                <div class="user-cell-email">1976 – presente</div>
+              </div>
+            </div>
+          </td>
+          <td style="max-width:280px;color:var(--text-secondary);font-size:12.5px">Historiador israelense e professor na Universidade Hebraica de Jerusalém, autor de Sapiens e Homo Deus...</td>
+          <td><span class="badge badge-info">2 livros</span></td>
+          <td>22/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-autor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">JT</div>
+              <div>
+                <div class="user-cell-name">J.R.R. Tolkien</div>
+                <div class="user-cell-email">1892 – 1973</div>
+              </div>
+            </div>
+          </td>
+          <td style="max-width:280px;color:var(--text-secondary);font-size:12.5px">Escritor inglês, autor de O Hobbit e O Senhor dos Anéis, pai da fantasia moderna...</td>
+          <td><span class="badge badge-info">4 livros</span></td>
+          <td>25/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-autor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Mostrando 1–5 de 18 autores</div>
+      <div class="pagination-pages">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <a href="#" class="page-btn">›</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('autores', 'Autores', 'Autores');</script>
+</body>
+</html>

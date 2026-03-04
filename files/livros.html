@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livros — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Livros</h1>
+      <p>Gerencie o acervo completo da biblioteca</p>
+    </div>
+    <a href="cadastro-livro.html" class="btn btn-primary">+ Adicionar Livro</a>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-search">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar por título, autor ou ISBN...">
+    </div>
+    <div class="toolbar-filters">
+      <select class="filter-select">
+        <option>Todas as categorias</option>
+        <option>Romance</option>
+        <option>Literatura Brasileira</option>
+        <option>Ficção Científica</option>
+        <option>Filosofia</option>
+        <option>História</option>
+      </select>
+      <select class="filter-select">
+        <option>Todos os status</option>
+        <option>Disponível</option>
+        <option>Emprestado</option>
+      </select>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-secondary btn-sm">⬇ Exportar</button>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Livro</th>
+          <th>Autores</th>
+          <th>Categoria</th>
+          <th>Ano</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">1984</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-001-2</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">George Orwell</span></div></td>
+          <td>Ficção Científica</td>
+          <td>1949</td>
+          <td><span class="badge badge-success">● Disponível</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon" title="Editar">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" title="Excluir">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">Dom Casmurro</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-002-9</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">Machado de Assis</span></div></td>
+          <td>Literatura Brasileira</td>
+          <td>1899</td>
+          <td><span class="badge badge-warning">● Emprestado</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" title="Não pode excluir — emprestado" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#22c55e,#16a34a)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">O Hobbit</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-003-6</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">J.R.R. Tolkien</span></div></td>
+          <td>Fantasia</td>
+          <td>1937</td>
+          <td><span class="badge badge-success">● Disponível</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">Sapiens</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-004-3</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">Yuval Noah Harari</span></div></td>
+          <td>História</td>
+          <td>2011</td>
+          <td><span class="badge badge-success">● Disponível</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">A Hora da Estrela</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-005-0</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">Clarice Lispector</span></div></td>
+          <td>Literatura Brasileira</td>
+          <td>1977</td>
+          <td><span class="badge badge-danger">● Atrasado</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#14b8a6,#0ea5e9)">📖</div>
+              <div class="book-cell-info">
+                <div class="book-cell-title">Memórias Póstumas de Brás Cubas</div>
+                <div class="book-cell-meta">ISBN: 978-85-7654-006-7</div>
+              </div>
+            </div>
+          </td>
+          <td><div class="tag-list"><span class="tag">Machado de Assis</span></div></td>
+          <td>Literatura Brasileira</td>
+          <td>1881</td>
+          <td><span class="badge badge-warning">● Emprestado</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-livro.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Mostrando 1–6 de 248 livros</div>
+      <div class="pagination-pages">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <span class="page-btn" style="border:none;color:var(--text-muted)">…</span>
+        <a href="#" class="page-btn">42</a>
+        <a href="#" class="page-btn">›</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('livros', 'Livros', 'Livros');</script>
+</body>
+</html>

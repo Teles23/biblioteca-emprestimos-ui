@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+  <style>
+    .recent-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; margin-top: 20px; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--surface-3);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
+    }
+    .activity-dot.success { background: var(--success); }
+    .activity-dot.warning { background: var(--warning); }
+    .activity-dot.info { background: var(--info); }
+    .activity-dot.danger { background: var(--danger); }
+    .activity-text { font-size: 13px; color: var(--text-primary); }
+    .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .overdue-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--surface-3);
+    }
+    .overdue-item:last-child { border-bottom: none; }
+    .overdue-days {
+      font-size: 11px; font-weight: 700; color: var(--danger);
+      background: var(--danger-soft); border-radius: 4px; padding: 2px 6px; margin-left: auto;
+    }
+    .welcome-bar {
+      background: linear-gradient(135deg, var(--sidebar-bg) 0%, #1a1f2e 100%);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-bar::before {
+      content: '📚';
+      position: absolute; right: 28px; font-size: 80px; opacity: 0.07; top: 50%; transform: translateY(-50%);
+    }
+    .welcome-bar h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .welcome-bar p { font-size: 13px; color: var(--sidebar-text); }
+  </style>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="welcome-bar">
+    <div>
+      <h2>Bom dia, Admin! 👋</h2>
+      <p>Você tem <strong style="color:var(--accent)">3 devoluções em atraso</strong> e 2 empréstimos para hoje.</p>
+    </div>
+    <a href="emprestimos.html" class="btn btn-primary">Ver empréstimos →</a>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stats-grid">
+    <div class="stat-card accent">
+      <div class="stat-icon accent">📚</div>
+      <div class="stat-value">248</div>
+      <div class="stat-label">Total de Livros</div>
+      <div class="stat-change up">↑ +12 este mês</div>
+    </div>
+    <div class="stat-card info">
+      <div class="stat-icon info">👥</div>
+      <div class="stat-value">134</div>
+      <div class="stat-label">Usuários Cadastrados</div>
+      <div class="stat-change up">↑ +5 esta semana</div>
+    </div>
+    <div class="stat-card success">
+      <div class="stat-icon success">📖</div>
+      <div class="stat-value">47</div>
+      <div class="stat-label">Empréstimos Ativos</div>
+      <div class="stat-change up">↑ +8 hoje</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-icon danger">⚠️</div>
+      <div class="stat-value">3</div>
+      <div class="stat-label">Livros em Atraso</div>
+      <div class="stat-change down">↓ Ação necessária</div>
+    </div>
+  </div>
+
+  <div class="recent-grid">
+    <!-- ATIVIDADE RECENTE -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Atividade Recente</div>
+        <a href="historico.html" class="btn btn-ghost btn-sm">Ver tudo →</a>
+      </div>
+      <div class="card-body">
+        <div class="activity-item">
+          <div class="activity-dot success"></div>
+          <div>
+            <div class="activity-text"><strong>Maria Oliveira</strong> devolveu <em>O Hobbit</em></div>
+            <div class="activity-time">há 12 minutos</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot info"></div>
+          <div>
+            <div class="activity-text"><strong>Carlos Santos</strong> emprestou <em>1984 - George Orwell</em></div>
+            <div class="activity-time">há 38 minutos</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot warning"></div>
+          <div>
+            <div class="activity-text"><strong>Luciana Ferreira</strong> tem devolução prevista para <em>hoje</em></div>
+            <div class="activity-time">há 1 hora</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot info"></div>
+          <div>
+            <div class="activity-text">Novo livro cadastrado: <em>Sapiens - Yuval Noah Harari</em></div>
+            <div class="activity-time">há 2 horas</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot danger"></div>
+          <div>
+            <div class="activity-text"><strong>Pedro Alves</strong> está com <em>Dom Casmurro</em> em atraso há 3 dias</div>
+            <div class="activity-time">há 3 horas</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot success"></div>
+          <div>
+            <div class="activity-text">Usuário <strong>Ana Lima</strong> cadastrado com sucesso</div>
+            <div class="activity-time">ontem, 16:42</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EM ATRASO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" style="color:var(--danger)">⚠️ Em Atraso</div>
+        <a href="emprestimos.html" class="btn btn-ghost btn-sm">Gerenciar</a>
+      </div>
+      <div class="card-body">
+        <div class="overdue-item">
+          <div>
+            <div style="font-size:13px;font-weight:550">Dom Casmurro</div>
+            <div style="font-size:11px;color:var(--text-muted)">Pedro Alves</div>
+          </div>
+          <span class="overdue-days">3 dias</span>
+        </div>
+        <div class="overdue-item">
+          <div>
+            <div style="font-size:13px;font-weight:550">Memórias Póstumas</div>
+            <div style="font-size:11px;color:var(--text-muted)">Fernanda Costa</div>
+          </div>
+          <span class="overdue-days">7 dias</span>
+        </div>
+        <div class="overdue-item">
+          <div>
+            <div style="font-size:13px;font-weight:550">A Hora da Estrela</div>
+            <div style="font-size:11px;color:var(--text-muted)">Rafael Mendes</div>
+          </div>
+          <span class="overdue-days">1 dia</span>
+        </div>
+
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+          <div class="section-title">Resumo do Acervo</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+            <div style="background:var(--success-soft);border-radius:var(--radius-sm);padding:12px;text-align:center">
+              <div style="font-size:20px;font-weight:750;color:#16a34a;font-family:'JetBrains Mono',monospace">201</div>
+              <div style="font-size:11px;color:#16a34a;margin-top:2px">Disponíveis</div>
+            </div>
+            <div style="background:var(--warning-soft);border-radius:var(--radius-sm);padding:12px;text-align:center">
+              <div style="font-size:20px;font-weight:750;color:#d97706;font-family:'JetBrains Mono',monospace">47</div>
+              <div style="font-size:11px;color:#d97706;margin-top:2px">Emprestados</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('dashboard', 'Dashboard', 'Dashboard');</script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histórico — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+  <style>
+    .dias-atraso { font-size:11px;font-weight:600;color:var(--danger);background:var(--danger-soft);border-radius:4px;padding:2px 6px; }
+    .dias-ok { font-size:11px;color:var(--success);font-weight:500; }
+  </style>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Histórico de Empréstimos</h1>
+      <p>Registro completo de todos os empréstimos e devoluções</p>
+    </div>
+    <button class="btn btn-secondary">⬇ Exportar Relatório</button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-body" style="padding:16px">
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Usuário</label>
+          <select>
+            <option>Todos os usuários</option>
+            <option>Maria Oliveira</option>
+            <option>Carlos Santos</option>
+            <option>Pedro Alves</option>
+            <option>Rafael Mendes</option>
+            <option>Fernanda Costa</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:160px">
+          <label>Livro</label>
+          <select>
+            <option>Todos os livros</option>
+            <option>1984</option>
+            <option>Dom Casmurro</option>
+            <option>O Hobbit</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:120px">
+          <label>Status</label>
+          <select>
+            <option>Todos</option>
+            <option>Devolvido</option>
+            <option>Devolvido com atraso</option>
+            <option>Ativo</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:130px">
+          <label>Data de</label>
+          <input type="date" value="2024-01-01">
+        </div>
+        <div class="form-group" style="flex:1;min-width:130px">
+          <label>Data até</label>
+          <input type="date" value="2024-02-08">
+        </div>
+        <button class="btn btn-primary" style="align-self:flex-end">🔍 Filtrar</button>
+        <button class="btn btn-secondary" style="align-self:flex-end">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Livro</th>
+          <th>Usuário</th>
+          <th>Data Empréstimo</th>
+          <th>Devolução Prevista</th>
+          <th>Devolução Real</th>
+          <th>Dias Atraso</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#041</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">1984</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#3b82f6,#6366f1)">CS</div>
+              Carlos Santos
+            </div>
+          </td>
+          <td>10/01/2024</td>
+          <td>24/01/2024</td>
+          <td>22/01/2024</td>
+          <td><span class="dias-ok">✓ No prazo</span></td>
+          <td><span class="badge badge-success">Devolvido</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#040</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#22c55e,#16a34a);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">O Hobbit</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#ec4899,#f43f5e)">MO</div>
+              Maria Oliveira
+            </div>
+          </td>
+          <td>05/01/2024</td>
+          <td>19/01/2024</td>
+          <td>19/01/2024</td>
+          <td><span class="dias-ok">✓ No prazo</span></td>
+          <td><span class="badge badge-success">Devolvido</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#039</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">Sapiens</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#f59e0b,#ef4444)">PA</div>
+              Pedro Alves
+            </div>
+          </td>
+          <td>02/01/2024</td>
+          <td>16/01/2024</td>
+          <td>21/01/2024</td>
+          <td><span class="dias-atraso">+5 dias</span></td>
+          <td><span class="badge badge-warning">Atrasado</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#038</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#14b8a6,#22c55e);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">A Hora da Estrela</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#ec4899,#f43f5e)">FC</div>
+              Fernanda Costa
+            </div>
+          </td>
+          <td>28/12/2023</td>
+          <td>11/01/2024</td>
+          <td>10/01/2024</td>
+          <td><span class="dias-ok">✓ No prazo</span></td>
+          <td><span class="badge badge-success">Devolvido</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#037</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#3b82f6,#6366f1);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">Dom Casmurro</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#14b8a6,#22c55e)">RM</div>
+              Rafael Mendes
+            </div>
+          </td>
+          <td>20/12/2023</td>
+          <td>03/01/2024</td>
+          <td>08/01/2024</td>
+          <td><span class="dias-atraso">+5 dias</span></td>
+          <td><span class="badge badge-warning">Atrasado</span></td>
+        </tr>
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;color:var(--text-muted)">#036</td>
+          <td>
+            <div class="book-cell">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);width:28px;height:36px;font-size:12px">📖</div>
+              <span style="font-size:13px;font-weight:500">Memórias Póstumas</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" style="gap:6px">
+              <div class="avatar" style="width:22px;height:22px;font-size:8px;background:linear-gradient(135deg,#3b82f6,#6366f1)">CS</div>
+              Carlos Santos
+            </div>
+          </td>
+          <td>15/12/2023</td>
+          <td>29/12/2023</td>
+          <td>28/12/2023</td>
+          <td><span class="dias-ok">✓ No prazo</span></td>
+          <td><span class="badge badge-success">Devolvido</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Mostrando 1–6 de 312 registros</div>
+      <div class="pagination-pages">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <span class="page-btn" style="border:none;color:var(--text-muted)">…</span>
+        <a href="#" class="page-btn">52</a>
+        <a href="#" class="page-btn">›</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('historico', 'Histórico', 'Histórico de Empréstimos');</script>
+</body>
+</html>

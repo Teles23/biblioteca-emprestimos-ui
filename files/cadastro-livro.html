@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Livro — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+  <style>
+    .author-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 20px;
+      background: var(--accent-soft); color: var(--accent-dark);
+      border: 1px solid rgba(232,168,56,0.25); font-size: 12px; font-weight: 500;
+    }
+    .author-chip button {
+      background: none; border: none; cursor: pointer; font-size: 13px;
+      color: var(--accent-dark); padding: 0; line-height: 1; width: auto;
+    }
+    .author-add { display: flex; gap: 8px; }
+    .author-add input { flex: 1; }
+  </style>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Cadastrar Livro</h1>
+      <p>Preencha os dados do novo livro para o acervo</p>
+    </div>
+    <a href="livros.html" class="btn btn-secondary">← Voltar</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+    <!-- FORM CARD -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Informações do Livro</div>
+        <span class="badge badge-neutral">Novo</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid form-grid-2" style="gap:18px">
+
+          <div class="form-group span-2">
+            <label>Título <span class="req">*</span></label>
+            <input type="text" placeholder="Ex: Dom Casmurro" value="O Senhor dos Anéis">
+            <div class="form-hint">Deve ser único no sistema</div>
+          </div>
+
+          <div class="form-group">
+            <label>Ano de Publicação <span class="req">*</span></label>
+            <input type="number" placeholder="AAAA" value="1954" min="1000" max="2099">
+          </div>
+
+          <div class="form-group">
+            <label>ISBN</label>
+            <input type="text" placeholder="978-85-0000-000-0" value="978-85-7654-007-4">
+          </div>
+
+          <div class="form-group span-2">
+            <label>Categoria <span class="req">*</span></label>
+            <select>
+              <option>Selecione uma categoria</option>
+              <option selected>Fantasia</option>
+              <option>Romance</option>
+              <option>Literatura Brasileira</option>
+              <option>Ficção Científica</option>
+              <option>Filosofia</option>
+              <option>História</option>
+            </select>
+          </div>
+
+          <div class="form-group span-2">
+            <label>Autores <span class="req">*</span> <span style="font-weight:400;color:var(--text-muted)">(mínimo 1)</span></label>
+            <div class="tag-list" style="margin-bottom:8px" id="author-chips">
+              <span class="author-chip">J.R.R. Tolkien <button onclick="this.parentElement.remove()">×</button></span>
+            </div>
+            <div class="author-add">
+              <select id="author-select">
+                <option>Selecione um autor</option>
+                <option>George Orwell</option>
+                <option>Machado de Assis</option>
+                <option>Clarice Lispector</option>
+                <option>Yuval Noah Harari</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" onclick="addAuthor()">+ Adicionar</button>
+            </div>
+          </div>
+
+          <div class="form-group span-2">
+            <label>Sinopse</label>
+            <textarea placeholder="Breve descrição do livro...">Uma épica jornada pela Terra Média, onde um hobbit e seus companheiros devem destruir o Um Anel para salvar o mundo da escuridão.</textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Número de Páginas</label>
+            <input type="number" placeholder="Ex: 320" value="1178">
+          </div>
+
+          <div class="form-group">
+            <label>Editora</label>
+            <input type="text" placeholder="Ex: Companhia das Letras" value="HarperCollins Brasil">
+          </div>
+
+        </div>
+
+        <div class="form-actions" style="margin-top:24px">
+          <a href="livros.html" class="btn btn-primary">💾 Salvar Livro</a>
+          <a href="livros.html" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR INFO -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Status</div></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label>Status Inicial</label>
+            <select>
+              <option selected>Disponível</option>
+              <option>Emprestado</option>
+            </select>
+            <div class="form-hint">Novos livros são cadastrados como <strong>disponível</strong> por padrão</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Capa do Livro</div></div>
+        <div class="card-body">
+          <div style="
+            border: 2px dashed var(--border); border-radius: var(--radius-sm);
+            padding: 30px 20px; text-align: center; cursor: pointer;
+            color: var(--text-muted); font-size: 13px;
+            transition: border-color 0.15s;
+          " onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:32px;margin-bottom:8px">🖼️</div>
+            <div style="font-weight:500;margin-bottom:4px">Arraste ou clique</div>
+            <div style="font-size:11px">PNG, JPG até 5MB</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        ℹ️ Após salvar, o livro ficará disponível para empréstimo imediatamente.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  initLayout('livros', 'Cadastrar Livro', 'Livros › Cadastrar');
+  function addAuthor() {
+    const sel = document.getElementById('author-select');
+    const name = sel.options[sel.selectedIndex].text;
+    if (sel.selectedIndex === 0) return;
+    const chip = document.createElement('span');
+    chip.className = 'author-chip';
+    chip.innerHTML = `${name} <button onclick="this.parentElement.remove()">×</button>`;
+    document.getElementById('author-chips').appendChild(chip);
+    sel.selectedIndex = 0;
+  }
+</script>
+</body>
+</html>

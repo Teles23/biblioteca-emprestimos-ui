@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Empréstimo — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+  <style>
+    .preview-card {
+      background: linear-gradient(135deg, var(--sidebar-bg), #1a1f2e);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: #fff;
+    }
+    .preview-label { font-size: 10px; color: var(--sidebar-text); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+    .preview-value { font-size: 14px; font-weight: 550; margin-top: 2px; }
+    .preview-row { margin-bottom: 14px; }
+    .preview-date { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+    .book-option-info { display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--surface-2); border-radius: var(--radius-sm); margin-top: 8px; }
+  </style>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Registrar Empréstimo</h1>
+      <p>Registre um novo empréstimo de livro</p>
+    </div>
+    <a href="emprestimos.html" class="btn btn-secondary">← Voltar</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+    <!-- FORM -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Dados do Empréstimo</div>
+        <span class="badge badge-neutral">Novo</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid" style="gap:20px">
+
+          <div class="form-group">
+            <label>Selecionar Livro <span class="req">*</span></label>
+            <select onchange="updatePreview()">
+              <option value="">— Selecione um livro disponível —</option>
+              <option value="1984" selected>1984 — George Orwell</option>
+              <option value="hobbit">O Hobbit — J.R.R. Tolkien</option>
+              <option value="sapiens">Sapiens — Yuval Noah Harari</option>
+              <option value="senhor">O Senhor dos Anéis — J.R.R. Tolkien</option>
+            </select>
+            <div class="book-option-info" id="book-info">
+              <div class="book-thumb" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);width:32px;height:42px;border-radius:3px;font-size:14px">📖</div>
+              <div>
+                <div style="font-size:13px;font-weight:550">1984</div>
+                <div style="font-size:11px;color:var(--text-muted)">George Orwell · Ficção Científica · 1949</div>
+                <span class="badge badge-success" style="margin-top:4px">● Disponível</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Selecionar Usuário <span class="req">*</span></label>
+            <select>
+              <option value="">— Selecione um usuário —</option>
+              <option selected>Maria Oliveira (maria.oliveira@email.com)</option>
+              <option>Carlos Santos (carlos.santos@email.com)</option>
+              <option>Ana Lima (ana.lima@email.com)</option>
+            </select>
+          </div>
+
+          <div class="form-grid form-grid-2">
+            <div class="form-group">
+              <label>Data do Empréstimo <span class="req">*</span></label>
+              <input type="date" id="data-emp" value="2024-02-08" onchange="calcDevol()">
+            </div>
+            <div class="form-group">
+              <label>Data de Devolução Prevista</label>
+              <input type="date" id="data-dev" value="2024-02-22" style="background:var(--surface-2);" readonly>
+              <div class="form-hint">Calculada automaticamente: +14 dias</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Observações <span style="font-weight:400;color:var(--text-muted)">(opcional)</span></label>
+            <textarea placeholder="Alguma observação sobre o empréstimo..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions" style="margin-top:24px">
+          <a href="emprestimos.html" class="btn btn-primary">📖 Confirmar Empréstimo</a>
+          <a href="emprestimos.html" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="preview-card">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--sidebar-text);margin-bottom:16px">Resumo do Empréstimo</div>
+        <div class="preview-row">
+          <div class="preview-label">Livro</div>
+          <div class="preview-value">1984</div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">Usuário</div>
+          <div class="preview-value">Maria Oliveira</div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">Data Empréstimo</div>
+          <div class="preview-date">08/02/2024</div>
+        </div>
+        <div class="preview-row">
+          <div class="preview-label">Devolução Prevista</div>
+          <div class="preview-date" style="color:#22c55e">22/02/2024</div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;margin-top:2px">
+          <div class="preview-label">Status após registro</div>
+          <div style="margin-top:6px"><span class="badge badge-warning">● Emprestado</span></div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        ℹ️ Apenas livros com status <strong>Disponível</strong> aparecem na lista de seleção. O status do livro será alterado para <strong>Emprestado</strong> automaticamente.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  initLayout('emprestimos', 'Registrar Empréstimo', 'Empréstimos › Registrar');
+
+  function calcDevol() {
+    const emp = document.getElementById('data-emp').value;
+    if (!emp) return;
+    const d = new Date(emp);
+    d.setDate(d.getDate() + 14);
+    document.getElementById('data-dev').value = d.toISOString().split('T')[0];
+  }
+</script>
+</body>
+</html>

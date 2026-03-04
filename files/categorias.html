@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorias — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Categorias</h1>
+      <p>Organize o acervo por categorias</p>
+    </div>
+    <a href="cadastro-categoria.html" class="btn btn-primary">+ Nova Categoria</a>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+    <!-- TABLE -->
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Livros</th>
+            <th>Cadastrada em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Literatura Brasileira</strong></td>
+            <td><span class="badge badge-info">42 livros</span></td>
+            <td>10/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed" title="Possui livros">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Ficção Científica</strong></td>
+            <td><span class="badge badge-info">28 livros</span></td>
+            <td>10/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Fantasia</strong></td>
+            <td><span class="badge badge-info">19 livros</span></td>
+            <td>10/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>História</strong></td>
+            <td><span class="badge badge-info">31 livros</span></td>
+            <td>12/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Filosofia</strong></td>
+            <td><span class="badge badge-info">15 livros</span></td>
+            <td>15/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Romance</strong></td>
+            <td><span class="badge badge-info">22 livros</span></td>
+            <td>18/01/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Autoajuda</strong></td>
+            <td><span class="badge badge-neutral">0 livros</span></td>
+            <td>20/02/2024</td>
+            <td>
+              <div class="actions-cell">
+                <a href="cadastro-categoria.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+                <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <div class="pagination-info">7 categorias cadastradas</div>
+      </div>
+    </div>
+
+    <!-- QUICK ADD FORM -->
+    <div class="card" style="position:sticky;top:88px">
+      <div class="card-header">
+        <div class="card-title">Adicionar Categoria</div>
+      </div>
+      <div class="card-body">
+        <div class="form-grid" style="gap:16px">
+          <div class="form-group">
+            <label>Nome da Categoria <span class="req">*</span></label>
+            <input type="text" placeholder="Ex: Biografia" value="">
+            <div class="form-hint">Nome deve ser único no sistema</div>
+          </div>
+          <div class="form-actions" style="margin-top:4px">
+            <button class="btn btn-primary" style="flex:1;justify-content:center">+ Criar</button>
+            <a href="cadastro-categoria.html" class="btn btn-secondary">Abrir form completo</a>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="alert alert-warning">
+            ⚠️ Não é possível excluir categorias com livros associados. Reclassifique os livros antes.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('categorias', 'Categorias', 'Categorias');</script>
+</body>
+</html>

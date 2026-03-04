@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Usuários</h1>
+      <p>Gerencie os leitores e administradores do sistema</p>
+    </div>
+    <a href="cadastro-leitor.html" class="btn btn-primary">+ Cadastrar Leitor</a>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-search">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar por nome ou e-mail...">
+    </div>
+    <div class="toolbar-filters">
+      <select class="filter-select">
+        <option>Todas as roles</option>
+        <option>ROLE_ADMIN</option>
+        <option>ROLE_USER</option>
+      </select>
+      <select class="filter-select">
+        <option>Todos os status</option>
+        <option>Ativo</option>
+        <option>Inativo</option>
+      </select>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-secondary btn-sm">⬇ Exportar</button>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Telefone</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Empréstimos</th>
+          <th>Cadastrado em</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#e8a838,#c8891a);color:#0f1117">AD</div>
+              <div>
+                <div class="user-cell-name">Admin Sistema</div>
+                <div class="user-cell-email">admin@biblioteca.com</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-secondary)">(11) 99999-0000</td>
+          <td><span class="badge badge-warning">ROLE_ADMIN</span></td>
+          <td><span class="badge badge-success">● Ativo</span></td>
+          <td>—</td>
+          <td>10/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-leitor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon" disabled style="opacity:0.4;cursor:not-allowed">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">MO</div>
+              <div>
+                <div class="user-cell-name">Maria Oliveira</div>
+                <div class="user-cell-email">maria.oliveira@email.com</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-secondary)">(11) 98765-4321</td>
+          <td><span class="badge badge-info">ROLE_USER</span></td>
+          <td><span class="badge badge-success">● Ativo</span></td>
+          <td><span class="badge badge-neutral">2 ativos</span></td>
+          <td>15/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-leitor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">CS</div>
+              <div>
+                <div class="user-cell-name">Carlos Santos</div>
+                <div class="user-cell-email">carlos.santos@email.com</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-secondary)">(21) 97654-3210</td>
+          <td><span class="badge badge-info">ROLE_USER</span></td>
+          <td><span class="badge badge-success">● Ativo</span></td>
+          <td><span class="badge badge-neutral">1 ativo</span></td>
+          <td>18/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-leitor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">PA</div>
+              <div>
+                <div class="user-cell-name">Pedro Alves</div>
+                <div class="user-cell-email">pedro.alves@email.com</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-secondary)">(31) 96543-2109</td>
+          <td><span class="badge badge-info">ROLE_USER</span></td>
+          <td><span class="badge badge-danger">● Em atraso</span></td>
+          <td><span class="badge badge-danger">1 atrasado</span></td>
+          <td>20/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-leitor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar" style="background:linear-gradient(135deg,#14b8a6,#22c55e)">LF</div>
+              <div>
+                <div class="user-cell-name">Luciana Ferreira</div>
+                <div class="user-cell-email">luciana.ferreira@email.com</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-secondary)">(41) 95432-1098</td>
+          <td><span class="badge badge-info">ROLE_USER</span></td>
+          <td><span class="badge badge-neutral">● Inativo</span></td>
+          <td><span class="badge badge-neutral">0 ativos</span></td>
+          <td>22/01/2024</td>
+          <td>
+            <div class="actions-cell">
+              <a href="cadastro-leitor.html" class="btn btn-secondary btn-sm btn-icon">✏️</a>
+              <button class="btn btn-danger btn-sm btn-icon">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div class="pagination-info">Mostrando 1–5 de 134 usuários</div>
+      <div class="pagination-pages">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <span class="page-btn" style="border:none;color:var(--text-muted)">…</span>
+        <a href="#" class="page-btn">27</a>
+        <a href="#" class="page-btn">›</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('usuarios', 'Usuários', 'Usuários');</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Categoria — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Cadastrar Categoria</h1>
+      <p>Adicione uma nova categoria ao sistema</p>
+    </div>
+    <a href="categorias.html" class="btn btn-secondary">← Voltar</a>
+  </div>
+
+  <div style="max-width:520px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Dados da Categoria</div>
+      </div>
+      <div class="card-body">
+        <div class="form-grid" style="gap:18px">
+          <div class="form-group">
+            <label>Nome da Categoria <span class="req">*</span></label>
+            <input type="text" placeholder="Ex: Biografia" value="Biografia">
+            <div class="form-hint">Deve ser único no sistema</div>
+          </div>
+          <div class="form-group">
+            <label>Descrição <span style="font-weight:400;color:var(--text-muted)">(opcional)</span></label>
+            <textarea placeholder="Descreva o tipo de livros nesta categoria...">Livros que narram a vida real de pessoas notáveis, desde políticos e artistas a cientistas e personalidades históricas.</textarea>
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top:24px">
+          <a href="categorias.html" class="btn btn-primary">💾 Salvar Categoria</a>
+          <a href="categorias.html" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('categorias', 'Cadastrar Categoria', 'Categorias › Cadastrar');</script>
+</body>
+</html>

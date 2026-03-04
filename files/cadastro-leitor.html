@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Leitor — LibraManager</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+<div id="sidebar-placeholder"></div>
+<div id="header-placeholder"></div>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Cadastrar Leitor</h1>
+      <p>Adicione um novo usuário ao sistema (ROLE_ADMIN)</p>
+    </div>
+    <a href="usuarios.html" class="btn btn-secondary">← Voltar</a>
+  </div>
+
+  <div style="max-width:640px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Dados do Leitor</div>
+        <span class="badge badge-neutral">Novo</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid form-grid-2" style="gap:18px">
+          <div class="form-group span-2">
+            <label>Nome completo <span class="req">*</span></label>
+            <input type="text" placeholder="Ex: Ana Paula Lima" value="Ana Paula Lima">
+          </div>
+
+          <div class="form-group span-2">
+            <label>E-mail <span class="req">*</span></label>
+            <input type="email" placeholder="ana.lima@email.com" value="ana.lima@email.com">
+            <div class="form-hint">Deve ser único no sistema</div>
+          </div>
+
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" placeholder="(11) 99999-9999" value="(11) 94321-8765">
+          </div>
+
+          <div class="form-group">
+            <label>Role padrão</label>
+            <select>
+              <option selected>ROLE_USER</option>
+              <option>ROLE_ADMIN</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="alert alert-info" style="margin-top:18px">
+          🔑 A senha será <strong>gerada automaticamente</strong> e enviada ao e-mail do usuário no cadastro.
+        </div>
+
+        <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 16px;margin-top:4px;border:1px dashed var(--border)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-secondary)">SENHA GERADA (visualização prévia)</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-primary);letter-spacing:0.05em">Bx#9kLpQ2m</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Esta senha será enviada por e-mail ao usuário</div>
+        </div>
+
+        <div class="form-actions" style="margin-top:24px">
+          <a href="usuarios.html" class="btn btn-primary">💾 Cadastrar Leitor</a>
+          <a href="usuarios.html" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>initLayout('usuarios', 'Cadastrar Leitor', 'Usuários › Cadastrar');</script>
+</body>
+</html>
