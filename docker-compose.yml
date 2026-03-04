@@ -1,0 +1,33 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - libramanager-network
+
+  backend:
+    image: node:20-alpine # Assumindo imagem ou build do backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/libramanager
+    networks:
+      - libramanager-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=libramanager
+    ports:
+      - "5432:5432"
+    networks:
+      - libramanager-network
+
+networks:
+  libramanager-network:
+    driver: bridge

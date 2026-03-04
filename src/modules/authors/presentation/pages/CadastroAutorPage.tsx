@@ -28,7 +28,7 @@ export function CadastroAutorPage() {
             async function loadAuthor() {
                 try {
                     const author = await repository.findById(id);
-                    setValue('name', author.name);
+                    setValue('name', author.name || '');
                     setValue('biography', author.biography || '');
                 } catch (err: any) {
                     setError('Erro ao carregar dados do autor.');
