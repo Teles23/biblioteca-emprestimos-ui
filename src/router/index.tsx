@@ -1,7 +1,10 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '../shared/layout/AppLayout';
 import { LoginPage } from '../modules/auth/presentation/pages/LoginPage';
 import { RegisterPage } from '../modules/auth/presentation/pages/RegisterPage';
+import { LivrosPage } from '../modules/books/presentation/pages/LivrosPage';
+import { CadastroLivroPage } from '../modules/books/presentation/pages/CadastroLivroPage';
+import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
 import { PrivateRoute } from './PrivateRoute';
 
 // Temporary Mock Page for testing layout
@@ -32,11 +35,24 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <MockPage title="Dashboard" />,
+                        element: <DashboardPage />,
                     },
                     {
                         path: 'livros',
-                        element: <MockPage title="Livros" />,
+                        children: [
+                            {
+                                index: true,
+                                element: <LivrosPage />,
+                            },
+                            {
+                                path: 'novo',
+                                element: <CadastroLivroPage />,
+                            },
+                            {
+                                path: ':id/editar',
+                                element: <CadastroLivroPage />,
+                            },
+                        ],
                     },
                     {
                         path: 'autores',
