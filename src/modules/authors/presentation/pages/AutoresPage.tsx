@@ -17,65 +17,100 @@ export function AutoresPage() {
     };
 
     return (
-        <div className="p-6 max-w-[1000px] mx-auto animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div>
-                    <h1 className="text-[24px] font-extrabold text-white tracking-tight leading-none mb-1.5">
-                        Autores ✍️
-                    </h1>
-                    <p className="text-[13px] text-sidebar-text">
-                        Gerencie os escritores e biógrafos cadastrados no sistema.
-                    </p>
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>Autores ✍️</h1>
+                    <p>Gerencie os escritores e biógrafos cadastrados no sistema.</p>
                 </div>
 
-                <Link
-                    to="/autores/novo"
-                    className="bg-accent text-[#0f1117] px-5 py-2.5 rounded-sm font-bold text-[13px] hover:bg-accent-dark transition-all flex items-center gap-2 w-fit"
-                >
+                <Link to="/autores/novo" className="btn btn-primary">
                     <span>➕</span> Novo Autor
                 </Link>
             </div>
 
-            <div className="bg-surface border border-border rounded-lg p-4 mb-6 flex gap-4">
-                <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">🔍</span>
+            <div className="toolbar">
+                <div className="toolbar-search">
+                    <span>🔍</span>
                     <input
                         type="text"
-                        placeholder="Buscar por nome..."
-                        className="w-full bg-surface-2 border border-border rounded-sm py-2 pl-9 pr-4 text-[13.5px] outline-none focus:border-accent"
+                        placeholder="Buscar por nome do autor..."
+                        className="w-full bg-transparent border-none outline-none text-[13px]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <button onClick={refresh} className="px-4 py-2 border border-border rounded-sm text-[13px] hover:bg-white/5">🔄</button>
+                <div className="toolbar-right">
+                    <button onClick={refresh} className="btn btn-secondary btn-sm">🔄 Atualizar</button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {loading ? (
-                    <div className="col-span-full py-20 text-center text-text-muted">Carregando autores...</div>
-                ) : filteredAuthors.length > 0 ? (
-                    filteredAuthors.map((author) => (
-                        <div key={author.id} className="bg-surface border border-border rounded-lg p-5 hover:border-accent transition-all group relative">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-bold text-white text-[15px] group-hover:text-accent transition-colors">{author.name}</h3>
-                                <div className="flex gap-2">
-                                    <Link to={`/autores/${author.id}/editar`} className="text-[14px] hover:grayscale-0 grayscale transition-all">✏️</Link>
-                                    <button onClick={() => handleDelete(author.id)} className="text-[14px] hover:grayscale-0 grayscale transition-all">🗑️</button>
-                                </div>
-                            </div>
-                            <p className="text-[12px] text-text-secondary line-clamp-3 leading-relaxed">
-                                {author.biography || 'Sem biografia cadastrada.'}
-                            </p>
-                            <div className="mt-4 pt-4 border-t border-white/5 text-[10px] text-text-muted">
-                                Cadastrado em {new Date(author.createdAt).toLocaleDateString()}
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <div className="col-span-full py-20 text-center text-text-muted bg-surface rounded-lg border border-dashed border-border">
-                        Nenhum autor encontrado.
-                    </div>
-                )}
+            {error && (
+                <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-[10px] mb-6 text-[13.5px] flex items-center gap-3">
+                    <span>⚠️</span> {error}
+                </div>
+            )}
+
+            <div className="table-container">
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Autor</th>
+                            <th>Biografia</th>
+                            <th>Cadastrado em</th>
+                            <th className="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <tr key={i} className="animate-pulse">
+                                    <td colSpan={4} className="py-8 text-center">
+                                        <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
+                                    </td>
+                                </tr>
+                            ))
+                        ) : filteredAuthors.length > 0 ? (
+                            filteredAuthors.map((author) => (
+                                <tr key={author.id}>
+                                    <td>
+                                        <div className="user-cell">
+                                            <div className="avatar" style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))', color: '#0f1117' }}>
+                                                {author.name.substring(0, 2).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <div className="user-cell-name">{author.name}</div>
+                                                <div className="user-cell-email">Escritor</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style={{ maxWidth: '300px' }}>
+                                        <p className="text-text-secondary line-clamp-2 text-[12.5px]">
+                                            {author.biography || 'Sem biografia cadastrada.'}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <div className="text-text-secondary text-[13px]">
+                                            {new Date(author.createdAt).toLocaleDateString()}
+                                        </div>
+                                    </td>
+                                    <td className="text-right">
+                                        <div className="actions-cell justify-end">
+                                            <Link to={`/autores/${author.id}/editar`} className="icon-btn" title="Editar">✏️</Link>
+                                            <button onClick={() => handleDelete(author.id)} className="icon-btn text-danger" title="Excluir">🗑️</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={4} className="py-12 text-center text-text-muted font-medium">
+                                    Nenhum autor encontrado.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

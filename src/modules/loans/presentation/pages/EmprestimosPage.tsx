@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 export function EmprestimosPage() {
     const { loans, loading, error, fetchActiveLoans, returnBook } = useLoans();
-    const [filter, setFilter] = useState<'ACTIVE' | 'OVERDUE'>('ACTIVE');
+    const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'OVERDUE'>('ALL');
 
     useEffect(() => {
         fetchActiveLoans();
@@ -16,98 +16,138 @@ export function EmprestimosPage() {
         }
     };
 
+    const filteredLoans = loans.filter(loan => {
+        if (filter === 'ACTIVE') return loan.status === 'ACTIVE';
+        if (filter === 'OVERDUE') return loan.status === 'OVERDUE';
+        return true;
+    });
+
+    const activeCount = loans.filter(l => l.status === 'ACTIVE').length;
+    const overdueCount = loans.filter(l => l.status === 'OVERDUE').length;
+
     return (
-        <div className="p-6 max-w-[1200px] mx-auto animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                <div>
-                    <h1 className="text-[24px] font-extrabold text-white tracking-tight leading-none mb-1.5">
-                        Empréstimos 🤝
-                    </h1>
-                    <p className="text-[13px] text-sidebar-text">
-                        Gerencie as retiradas e devoluções de livros.
-                    </p>
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>Empréstimos 🤝</h1>
+                    <p>Controle de livros emprestados e devoluções</p>
                 </div>
 
-                <Link
-                    to="/emprestimos/novo"
-                    className="bg-accent text-[#0f1117] px-5 py-2.5 rounded-sm font-bold text-[13px] hover:bg-accent-dark transition-all flex items-center gap-2 w-fit"
-                >
+                <Link to="/emprestimos/novo" className="btn btn-primary">
                     <span>➕</span> Registrar Empréstimo
                 </Link>
             </div>
 
-            <div className="flex gap-2 mb-6 border-b border-border pb-px">
-                <button
-                    onClick={() => setFilter('ACTIVE')}
-                    className={`px-4 py-2 text-[13px] font-bold transition-all border-b-2 ${filter === 'ACTIVE' ? 'border-accent text-accent' : 'border-transparent text-text-muted hover:text-white'}`}
-                >
-                    Ativos
-                </button>
-                <button
-                    onClick={() => setFilter('OVERDUE')}
-                    className={`px-4 py-2 text-[13px] font-bold transition-all border-b-2 ${filter === 'OVERDUE' ? 'border-accent text-accent' : 'border-transparent text-text-muted hover:text-white'}`}
-                >
-                    Atrasados
-                </button>
+            {/* MINI STATS */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-surface border border-border rounded-[10px] p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-info/10 rounded-[6px] flex items-center justify-center text-[20px]">📖</div>
+                    <div>
+                        <div className="text-[22px] font-bold font-mono text-text-primary">{activeCount + overdueCount}</div>
+                        <div className="text-[12px] text-text-secondary">Empréstimos Ativos</div>
+                    </div>
+                </div>
+                <div className="bg-surface border border-border rounded-[10px] p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-warning/10 rounded-[6px] flex items-center justify-center text-[20px]">⏳</div>
+                    <div>
+                        <div className="text-[22px] font-bold font-mono text-text-primary">0</div>
+                        <div className="text-[12px] text-text-secondary">Vencem Hoje</div>
+                    </div>
+                </div>
+                <div className="bg-surface border border-border rounded-[10px] p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-danger/10 rounded-[6px] flex items-center justify-center text-[20px]">⚠️</div>
+                    <div>
+                        <div className="text-[22px] font-bold font-mono text-danger">{overdueCount}</div>
+                        <div className="text-[12px] text-text-secondary">Em Atraso</div>
+                    </div>
+                </div>
             </div>
 
-            {error && (
-                <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-sm mb-6 text-[13px]">
-                    ⚠️ {error}
+            <div className="toolbar">
+                <div className="toolbar-search">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Buscar por livro ou usuário..." className="bg-transparent border-none outline-none text-[13px] w-full" />
                 </div>
-            )}
+                <div className="toolbar-filters">
+                    <select
+                        className="bg-surface border border-border rounded-[6px] px-3 py-2 text-[12.5px] outline-none"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value as any)}
+                    >
+                        <option value="ALL">Todos os status</option>
+                        <option value="ACTIVE">Ativos</option>
+                        <option value="OVERDUE">Em atraso</option>
+                    </select>
+                </div>
+            </div>
 
-            <div className="grid grid-cols-1 gap-4">
-                {loading ? (
-                    <div className="py-20 text-center text-text-muted bg-surface rounded-lg border border-border">Carregando empréstimos...</div>
-                ) : loans.length > 0 ? (
-                    loans.map((loan) => (
-                        <div key={loan.id} className="bg-surface border border-border rounded-lg p-5 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-white/20 transition-all">
-                            <div className="flex items-start gap-4">
-                                <div className="w-12 h-16 bg-surface-2 rounded-sm border border-border flex items-center justify-center text-2xl shrink-0">📖</div>
-                                <div>
-                                    <h3 className="font-bold text-white text-[15px] mb-1">{loan.book?.title}</h3>
-                                    <div className="flex items-center gap-2 text-[12px] text-text-secondary">
-                                        <span className="font-medium text-text-primary">{loan.user?.name}</span>
-                                        <span className="text-white/10">•</span>
-                                        <span>{loan.user?.email}</span>
-                                    </div>
-                                    <div className="mt-3 flex flex-wrap gap-4 text-[11px] uppercase tracking-wider font-extrabold">
-                                        <div className="flex flex-col">
-                                            <span className="text-text-muted mb-0.5">Retirada</span>
-                                            <span className="text-white">{new Date(loan.loanDate).toLocaleDateString()}</span>
+            <div className="table-container">
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Usuário</th>
+                            <th>Empréstimo</th>
+                            <th>Devolução</th>
+                            <th>Status</th>
+                            <th className="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <tr key={i} className="animate-pulse">
+                                    <td colSpan={6} className="py-8 text-center">
+                                        <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
+                                    </td>
+                                </tr>
+                            ))
+                        ) : filteredLoans.length > 0 ? (
+                            filteredLoans.map((loan) => (
+                                <tr key={loan.id} className={loan.status === 'OVERDUE' ? 'bg-danger/[0.03]' : ''}>
+                                    <td>
+                                        <div className="flex items-center gap-2.5">
+                                            <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 ${loan.status === 'OVERDUE' ? 'bg-danger/20' : 'bg-accent/20'
+                                                }`}>📖</div>
+                                            <div className="font-bold text-[13.5px] text-text-primary">{loan.book?.title}</div>
                                         </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-text-muted mb-0.5">Entrega</span>
-                                            <span className={`${loan.status === 'OVERDUE' ? 'text-danger' : 'text-accent'}`}>
-                                                {new Date(loan.dueDate).toLocaleDateString()}
-                                            </span>
+                                    </td>
+                                    <td>
+                                        <div className="user-cell">
+                                            <div className="avatar" style={{ width: '24px', height: '24px', fontSize: '9px', background: 'var(--surface-3)' }}>
+                                                {loan.user?.name?.substring(0, 2).toUpperCase() || '??'}
+                                            </div>
+                                            <span className="text-[13px]">{loan.user?.name}</span>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-3">
-                                {loan.lateDays > 0 && (
-                                    <div className="px-3 py-2 bg-danger/10 border border-danger/20 rounded-sm text-center">
-                                        <p className="text-[9px] text-danger font-black uppercase tracking-tighter">Atraso</p>
-                                        <p className="text-[14px] text-danger font-black leading-none">{loan.lateDays} dias</p>
-                                    </div>
-                                )}
-                                <button
-                                    onClick={() => handleReturn(loan.id)}
-                                    className="bg-white/5 border border-white/10 text-white hover:bg-success hover:border-success hover:text-white h-12 px-6 rounded-sm font-bold text-[13px] transition-all"
-                                >
-                                    Confirmar Devolução
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <div className="py-20 text-center text-text-muted bg-surface rounded-lg border border-dashed border-border">
-                        Nenhum empréstimo {filter === 'ACTIVE' ? 'ativo' : 'atrasado'} encontrado.
-                    </div>
-                )}
+                                    </td>
+                                    <td className="text-[13px] text-text-secondary">{new Date(loan.loanDate).toLocaleDateString()}</td>
+                                    <td>
+                                        <div className={`text-[13px] ${loan.status === 'OVERDUE' ? 'text-danger font-bold' : 'text-text-primary'}`}>
+                                            {new Date(loan.dueDate).toLocaleDateString()}
+                                            {loan.lateDays > 0 && <span className="ml-1 text-[11px] opacity-70">({loan.lateDays}d)</span>}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={`badge ${loan.status === 'OVERDUE' ? 'badge-danger' : 'badge-warning'}`}>
+                                            ● {loan.status === 'OVERDUE' ? 'Atrasado' : 'Ativo'}
+                                        </span>
+                                    </td>
+                                    <td className="text-right">
+                                        <button onClick={() => handleReturn(loan.id)} className="btn btn-primary btn-sm">
+                                            ↩ Devolver
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={6} className="py-12 text-center text-text-muted">
+                                    Nenhum empréstimo encontrado.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

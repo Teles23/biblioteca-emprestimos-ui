@@ -2,18 +2,13 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
-interface AppLayoutProps {
-    title?: string;
-    breadcrumb?: string;
-}
-
-export function AppLayout({ title, breadcrumb }: AppLayoutProps) {
+export function AppLayout() {
     return (
-        <div className="flex min-h-screen">
+        <div className="app-layout">
             <Sidebar />
-            <div className="flex-1">
-                <Header title={title} breadcrumb={breadcrumb} />
-                <main className="ml-sidebar mt-header p-7 min-h-[calc(100vh-var(--header-height))] bg-surface-2">
+            <div className="flex-1 flex flex-col min-h-screen">
+                <Header />
+                <main className="main-content">
                     <Outlet />
                 </main>
             </div>

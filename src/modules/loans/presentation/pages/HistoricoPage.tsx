@@ -25,60 +25,71 @@ export function HistoricoPage() {
     }, []);
 
     return (
-        <div className="p-6 max-w-[1200px] mx-auto animate-in fade-in duration-500">
-            <div className="mb-8">
-                <h1 className="text-[24px] font-extrabold text-white tracking-tight leading-none mb-1.5">
-                    Histórico Sugerido 📜
-                </h1>
-                <p className="text-[13px] text-sidebar-text">
-                    Registro completo de todos os empréstimos realizados e finalizados.
-                </p>
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>Histórico de Operações 📜</h1>
+                    <p>Registro completo de todos os empréstimos realizados e finalizados.</p>
+                </div>
             </div>
 
             {error && (
-                <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-sm mb-6 text-[13px]">
-                    ⚠️ {error}
+                <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-[10px] mb-6 text-[13.5px]">
+                    <span>⚠️</span> {error}
                 </div>
             )}
 
-            <div className="bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
-                <table className="w-full text-left border-collapse">
+            <div className="table-container">
+                <table className="data-table">
                     <thead>
-                        <tr className="bg-surface-2 border-b border-border">
-                            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-text-muted">Livro</th>
-                            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-text-muted">Leitor</th>
-                            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-text-muted">Datas</th>
-                            <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-text-muted">Status / Devolução</th>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Leitor</th>
+                            <th>Datas Operação</th>
+                            <th>Status / Devolução</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-border">
+                    <tbody>
                         {loading ? (
-                            <tr><td colSpan={4} className="px-6 py-10 text-center text-text-muted">Carregando histórico...</td></tr>
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <tr key={i} className="animate-pulse">
+                                    <td colSpan={4} className="py-8 text-center">
+                                        <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
+                                    </td>
+                                </tr>
+                            ))
                         ) : history.length > 0 ? (
                             history.map((loan) => (
-                                <tr key={loan.id} className="hover:bg-white/[0.01] transition-colors">
-                                    <td className="px-6 py-4">
-                                        <span className="font-bold text-[14px] text-white underline-none">{loan.book?.title}</span>
+                                <tr key={loan.id}>
+                                    <td>
+                                        <div className="flex items-center gap-2.5">
+                                            <div className="w-8 h-8 rounded-[4px] bg-surface-2 flex items-center justify-center shrink-0">📖</div>
+                                            <div className="font-bold text-[13.5px] text-text-primary">{loan.book?.title}</div>
+                                        </div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-[13px] text-white font-medium">{loan.user?.name}</div>
-                                        <div className="text-[11px] text-text-secondary">{loan.user?.email}</div>
+                                    <td>
+                                        <div className="user-cell">
+                                            <div className="avatar" style={{ width: '24px', height: '24px', fontSize: '9px', background: 'var(--surface-3)' }}>
+                                                {loan.user?.name?.substring(0, 2).toUpperCase() || '??'}
+                                            </div>
+                                            <span className="text-[13px]">{loan.user?.name}</span>
+                                        </div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-[11px] uppercase text-text-muted mb-0.5 font-bold">Retirada: {new Date(loan.loanDate).toLocaleDateString()}</div>
+                                    <td>
+                                        <div className="text-[11px] uppercase text-text-muted font-bold">Retirada: {new Date(loan.loanDate).toLocaleDateString()}</div>
                                         <div className="text-[11px] uppercase text-text-muted font-bold">Prevista: {new Date(loan.dueDate).toLocaleDateString()}</div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex flex-col gap-1">
-                                            <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm w-fit border ${loan.status === 'RETURNED' ? 'bg-success/10 border-success/20 text-success' :
-                                                loan.status === 'OVERDUE' ? 'bg-danger/10 border-danger/20 text-danger' :
-                                                    'bg-accent/10 border-accent/20 text-accent'
+                                    <td>
+                                        <div className="flex flex-col gap-1.5">
+                                            <span className={`badge ${loan.status === 'RETURNED' ? 'badge-success' :
+                                                    loan.status === 'OVERDUE' ? 'badge-danger' : 'badge-warning'
                                                 }`}>
-                                                {loan.status}
+                                                {loan.status === 'RETURNED' ? 'Devolvido' :
+                                                    loan.status === 'OVERDUE' ? 'Em Atraso' : 'Ativo'}
                                             </span>
                                             {loan.returnDate && (
-                                                <span className="text-[11px] text-text-secondary">
-                                                    Devolvido em {new Date(loan.returnDate).toLocaleDateString()}
+                                                <span className="text-[11px] text-text-secondary font-medium">
+                                                    Finalizado em {new Date(loan.returnDate).toLocaleDateString()}
                                                 </span>
                                             )}
                                         </div>
@@ -86,7 +97,11 @@ export function HistoricoPage() {
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan={4} className="px-6 py-10 text-center text-text-muted">Nenhum registro encontrado.</td></tr>
+                            <tr>
+                                <td colSpan={4} className="py-12 text-center text-text-muted">
+                                    Nenhum registro encontrado no histórico.
+                                </td>
+                            </tr>
                         )}
                     </tbody>
                 </table>
