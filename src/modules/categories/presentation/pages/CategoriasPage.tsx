@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 export function CategoriasPage() {
-    const { categories, loading, error, deleteCategory, refresh } = useCategories();
+    const { categories, loading, deleteCategory, refresh } = useCategories();
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredCategories = categories.filter((c) =>

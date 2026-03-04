@@ -8,6 +8,8 @@ import { AutoresPage } from '../modules/authors/presentation/pages/AutoresPage';
 import { CadastroAutorPage } from '../modules/authors/presentation/pages/CadastroAutorPage';
 import { CategoriasPage } from '../modules/categories/presentation/pages/CategoriasPage';
 import { CadastroCategoriaPage } from '../modules/categories/presentation/pages/CadastroCategoriaPage';
+import { UsuariosPage } from '../modules/users/presentation/pages/UsuariosPage';
+import { CadastroUsuarioPage } from '../modules/users/presentation/pages/CadastroUsuarioPage';
 import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
 import { PrivateRoute } from './PrivateRoute';
 
@@ -113,7 +115,16 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         path: 'usuarios',
-                        element: <MockPage title="Configurações de Usuários" />,
+                        children: [
+                            {
+                                index: true,
+                                element: <UsuariosPage />,
+                            },
+                            {
+                                path: 'novo',
+                                element: <CadastroUsuarioPage />,
+                            },
+                        ],
                     },
                 ],
             },
