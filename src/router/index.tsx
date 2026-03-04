@@ -1,5 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '../shared/layout/AppLayout';
+import { LoginPage } from '../modules/auth/presentation/pages/LoginPage';
+import { RegisterPage } from '../modules/auth/presentation/pages/RegisterPage';
 
 // Temporary Mock Page for testing layout
 const MockPage = ({ title }: { title: string }) => (
@@ -48,7 +50,11 @@ export const router = createBrowserRouter([
     },
     {
         path: '/login',
-        element: <div className="p-10 text-center">Página de Login em breve...</div>,
+        element: <LoginPage />,
+    },
+    {
+        path: '/register',
+        element: <RegisterPage />,
     },
     {
         path: '*',
