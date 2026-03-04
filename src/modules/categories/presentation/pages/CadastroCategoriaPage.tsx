@@ -53,45 +53,48 @@ export function CadastroCategoriaPage() {
     };
 
     return (
-        <div className="p-6 max-w-[600px] mx-auto animate-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8">
-                <Link to="/categorias" className="text-[12px] text-accent hover:underline mb-2 inline-block">
-                    ← Voltar para categorias
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>{id ? 'Editar Categoria' : 'Nova Categoria'} 📁</h1>
+                    <p>{id ? 'Atualize o nome da categoria selecionada' : 'Crie uma nova categoria para organizar seus livros'}</p>
+                </div>
+                <Link to="/categorias" className="btn btn-secondary">
+                    ← Voltar
                 </Link>
-                <h1 className="text-[24px] font-extrabold text-white tracking-tight">
-                    {id ? 'Editar Categoria 🛠️' : 'Nova Categoria 📁'}
-                </h1>
             </div>
 
-            <div className="bg-surface border border-border rounded-lg p-8 shadow-xl">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="flex flex-col gap-1.5">
-                        <label className="text-[12px] font-semibold text-text-primary tracking-wide">Nome da Categoria</label>
-                        <input
-                            {...register('name')}
-                            placeholder="Ex: Ficção Científica, Biografia..."
-                            className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent transition-all ${errors.name ? 'border-danger' : ''}`}
-                        />
-                        {errors.name && <span className="text-[11px] text-danger font-medium">{errors.name.message}</span>}
-                    </div>
-
-                    {error && (
-                        <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[13px] font-medium">
-                            ⚠️ {error}
+            <div className="card max-w-[600px]">
+                <div className="card-header">
+                    <div className="card-title">Informações da Categoria</div>
+                </div>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-group">
+                            <label>Nome da Categoria <span className="req">*</span></label>
+                            <input
+                                {...register('name')}
+                                type="text"
+                                placeholder="Ex: Ficção Científica, Romance, Biografia..."
+                                className={errors.name ? 'border-danger' : ''}
+                            />
+                            {errors.name && <span className="text-[11px] text-danger mt-1">{errors.name.message}</span>}
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
-                        <Link to="/categorias" className="text-[13px] font-bold text-text-muted hover:text-white transition-colors">Cancelar</Link>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="bg-accent text-[#0f1117] px-8 py-2.5 rounded-sm font-bold text-[14px] hover:bg-accent-dark transition-all shadow-[0_4px_12px_rgba(232,168,56,0.3)] disabled:opacity-50"
-                        >
-                            {loading ? 'Salvando...' : 'Salvar Categoria'}
-                        </button>
-                    </div>
-                </form>
+                        {error && (
+                            <div className="alert alert-info mt-6">
+                                ⚠️ {error}
+                            </div>
+                        )}
+
+                        <div className="form-actions mt-8">
+                            <button type="submit" disabled={loading} className="btn btn-primary">
+                                {loading ? 'Salvando...' : '💾 Salvar Categoria'}
+                            </button>
+                            <Link to="/categorias" className="btn btn-secondary">Cancelar</Link>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

@@ -90,94 +90,155 @@ export function CadastroLivroPage() {
     };
 
     return (
-        <div className="p-6 max-w-[800px] mx-auto animate-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8">
-                <Link to="/livros" className="text-[12px] text-accent hover:underline mb-2 inline-block">
-                    ← Voltar para listagem
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>{id ? 'Editar Livro' : 'Cadastrar Livro'} 📚</h1>
+                    <p>{id ? 'Atualize as informações do livro no acervo' : 'Preencha os dados do novo livro para o acervo'}</p>
+                </div>
+                <Link to="/livros" className="btn btn-secondary">
+                    ← Voltar
                 </Link>
-                <h1 className="text-[24px] font-extrabold text-white tracking-tight">
-                    {id ? 'Editar Livro' : 'Novo Livro'} 📚
-                </h1>
             </div>
 
-            <div className="bg-surface border border-border rounded-lg p-8 shadow-xl">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-1.5 md:col-span-2">
-                            <label className="text-[12px] font-semibold text-text-primary tracking-wide">Título do Livro</label>
-                            <input
-                                {...register('title')}
-                                type="text"
-                                placeholder="Ex: O Senhor dos Anéis"
-                                className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent transition-all ${errors.title ? 'border-danger' : ''}`}
-                            />
-                            {errors.title && <span className="text-[11px] text-danger font-medium">{errors.title.message}</span>}
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+                    {/* FORM CARD */}
+                    <div className="card">
+                        <div className="card-header">
+                            <div className="card-title">Informações do Livro</div>
+                            <span className="badge badge-neutral">{id ? 'Edição' : 'Novo'}</span>
                         </div>
-
-                        <div className="flex flex-col gap-1.5">
-                            <label className="text-[12px] font-semibold text-text-primary tracking-wide">Ano de Publicação</label>
-                            <input
-                                {...register('publicationYear', { valueAsNumber: true })}
-                                type="number"
-                                placeholder="Ex: 1954"
-                                className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent transition-all ${errors.publicationYear ? 'border-danger' : ''}`}
-                            />
-                            {errors.publicationYear && <span className="text-[11px] text-danger font-medium">{errors.publicationYear.message}</span>}
-                        </div>
-
-                        <div className="flex flex-col gap-1.5">
-                            <label className="text-[12px] font-semibold text-text-primary tracking-wide">Categoria</label>
-                            <select
-                                {...register('categoryId')}
-                                className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent transition-all appearance-none ${errors.categoryId ? 'border-danger' : ''}`}
-                            >
-                                <option value="">Selecione uma categoria...</option>
-                                {categories.map(c => (
-                                    <option key={c.id} value={c.id}>{c.name}</option>
-                                ))}
-                            </select>
-                            {errors.categoryId && <span className="text-[11px] text-danger font-medium">{errors.categoryId.message}</span>}
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                        <label className="text-[12px] font-semibold text-text-primary tracking-wide">Selecione os Autores</label>
-                        <div className="bg-surface-2 border border-border rounded-sm p-4 h-[180px] overflow-y-auto main-scrollbar grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {authors.map(author => (
-                                <div
-                                    key={author.id}
-                                    onClick={() => toggleAuthor(author.id)}
-                                    className={`flex items-center gap-2 p-2 rounded-sm cursor-pointer border transition-all ${selectedAuthorIds.includes(author.id)
-                                        ? 'bg-accent/10 border-accent text-accent'
-                                        : 'border-transparent text-sidebar-text hover:bg-white/5'
-                                        }`}
-                                >
-                                    <span className="text-[14px]">{selectedAuthorIds.includes(author.id) ? '✅' : '👤'}</span>
-                                    <span className="text-[12.5px] font-medium truncate">{author.name}</span>
+                        <div className="card-body">
+                            <div className="form-grid form-grid-2">
+                                <div className="form-group span-2">
+                                    <label>Título <span className="req">*</span></label>
+                                    <input
+                                        {...register('title')}
+                                        type="text"
+                                        placeholder="Ex: Dom Casmurro"
+                                        className={errors.title ? 'border-danger' : ''}
+                                    />
+                                    {errors.title && <span className="text-[11px] text-danger mt-1">{errors.title.message}</span>}
+                                    <div className="form-hint">O título deve ser claro e completo.</div>
                                 </div>
-                            ))}
+
+                                <div className="form-group">
+                                    <label>Ano de Publicação <span className="req">*</span></label>
+                                    <input
+                                        {...register('publicationYear', { valueAsNumber: true })}
+                                        type="number"
+                                        placeholder="AAAA"
+                                        className={errors.publicationYear ? 'border-danger' : ''}
+                                    />
+                                    {errors.publicationYear && <span className="text-[11px] text-danger mt-1">{errors.publicationYear.message}</span>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>ISBN (Opcional)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="978-85-..."
+                                    />
+                                </div>
+
+                                <div className="form-group span-2">
+                                    <label>Categoria <span className="req">*</span></label>
+                                    <select
+                                        {...register('categoryId')}
+                                        className={errors.categoryId ? 'border-danger' : ''}
+                                    >
+                                        <option value="">Selecione uma categoria</option>
+                                        {categories.map(c => (
+                                            <option key={c.id} value={c.id}>{c.name}</option>
+                                        ))}
+                                    </select>
+                                    {errors.categoryId && <span className="text-[11px] text-danger mt-1">{errors.categoryId.message}</span>}
+                                </div>
+
+                                <div className="form-group span-2">
+                                    <label>Autores <span className="req">*</span> <span className="text-text-muted font-normal">(mínimo 1)</span></label>
+                                    <div className="flex flex-wrap gap-2 mb-3 min-h-[40px] p-2 bg-surface-2 border border-border rounded-sm">
+                                        {selectedAuthorIds.length > 0 ? (
+                                            selectedAuthorIds.map(id => {
+                                                const author = authors.find(a => a.id === id);
+                                                return author ? (
+                                                    <span key={id} className="inline-flex items-center gap-2 px-3 py-1 bg-accent/20 text-accent border border-accent/30 rounded-full text-[12px] font-bold">
+                                                        {author.name}
+                                                        <button type="button" onClick={() => toggleAuthor(id)} className="hover:text-white">×</button>
+                                                    </span>
+                                                ) : null;
+                                            })
+                                        ) : (
+                                            <span className="text-[12px] text-text-muted italic">Nenhum autor selecionado</span>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 h-[150px] overflow-y-auto p-2 bg-surface-2 border border-border rounded-sm main-scrollbar">
+                                        {authors.map(author => (
+                                            <div
+                                                key={author.id}
+                                                onClick={() => toggleAuthor(author.id)}
+                                                className={`p-2 rounded-sm cursor-pointer text-[12px] transition-all border ${selectedAuthorIds.includes(author.id)
+                                                        ? 'bg-accent/10 border-accent/20 text-accent'
+                                                        : 'border-transparent hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                {selectedAuthorIds.includes(author.id) ? '✅' : '👤'} {author.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {errors.authorIds && <span className="text-[11px] text-danger mt-1">{errors.authorIds.message}</span>}
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div className="alert alert-info mt-6">
+                                    ⚠️ {error}
+                                </div>
+                            )}
+
+                            <div className="form-actions mt-8">
+                                <button type="submit" disabled={loading} className="btn btn-primary">
+                                    {loading ? 'Salvando...' : '💾 Salvar Livro'}
+                                </button>
+                                <Link to="/livros" className="btn btn-secondary">Cancelar</Link>
+                            </div>
                         </div>
-                        {errors.authorIds && <span className="text-[11px] text-danger font-medium">{errors.authorIds.message}</span>}
                     </div>
 
-                    {error && (
-                        <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[13px] font-medium animate-in fade-in zoom-in duration-300">
-                            ⚠️ {error}
+                    {/* SIDEBAR INFO */}
+                    <div className="flex flex-col gap-4">
+                        <div className="card">
+                            <div className="card-header"><div className="card-title">Status</div></div>
+                            <div className="card-body">
+                                <div className="form-group">
+                                    <label>Status Inicial</label>
+                                    <select disabled={!!id}>
+                                        <option value="AVAILABLE">Disponível</option>
+                                        <option value="BORROWED">Emprestado</option>
+                                    </select>
+                                    <div className="form-hint">Novos livros são cadastrados como <strong>disponível</strong> por padrão</div>
+                                </div>
+                            </div>
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
-                        <Link to="/livros" className="text-[13px] font-bold text-text-muted hover:text-white transition-colors">Cancelar</Link>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="bg-accent text-[#0f1117] px-8 py-2.5 rounded-sm font-bold text-[14px] hover:bg-accent-dark transition-all shadow-[0_4px_12px_rgba(232,168,56,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? 'Salvando...' : (id ? 'Atualizar Livro' : 'Salvar Livro')}
-                        </button>
+                        <div className="card">
+                            <div className="card-header"><div className="card-title">Capa do Livro</div></div>
+                            <div className="card-body">
+                                <div className="border-2 border-dashed border-border rounded-sm p-8 text-center cursor-pointer hover:border-accent transition-all text-text-muted">
+                                    <div className="text-[32px] mb-2">🖼️</div>
+                                    <div className="text-[13px] font-bold">Arraste ou clique</div>
+                                    <div className="text-[11px]">PNG, JPG até 5MB</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="alert alert-info">
+                            ℹ️ O livro ficará visível para todos após o salvamento.
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     );
 }
