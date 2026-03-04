@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../shared/contexts/AuthContext';
+import { useState } from 'react';
 
 const registerSchema = z.object({
     name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
@@ -21,6 +23,11 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
+    const { register: registerUser } = useAuth();
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -29,9 +36,18 @@ export function RegisterPage() {
         resolver: zodResolver(registerSchema),
     });
 
-    const onSubmit = (data: RegisterFormValues) => {
-        console.log('Register data:', data);
-        // TODO: Implementar chamada ao UseCase de Registro
+    const onSubmit = async (data: RegisterFormValues) => {
+        try {
+            setError(null);
+            setLoading(true);
+            await registerUser({ name: data.name, email: data.email, password: data.password });
+            alert('Conta criada com sucesso! Faça login para continuar.');
+            navigate('/login');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Erro ao realizar cadastro. Tente novamente mais tarde.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -174,11 +190,17 @@ export function RegisterPage() {
                         )}
 
                         <div className="pt-2">
+                            {error && (
+                                <div className="bg-danger-soft border border-danger/20 text-danger text-[13px] p-3 rounded-sm font-medium mb-4">
+                                    ⚠️ {error}
+                                </div>
+                            )}
                             <button
                                 type="submit"
-                                className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px]"
+                                disabled={loading}
+                                className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                             >
-                                Cadastrar agora →
+                                {loading ? 'Cadastrando...' : 'Cadastrar agora →'}
                             </button>
                         </div>
 

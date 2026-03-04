@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../shared/contexts/AuthContext';
+import { useState } from 'react';
 
 const loginSchema = z.object({
     email: z.string().email('E-mail inválido'),
@@ -12,6 +14,11 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -25,9 +32,17 @@ export function LoginPage() {
         }
     });
 
-    const onSubmit = (data: LoginFormValues) => {
-        console.log('Login data:', data);
-        // TODO: Implementar chamada ao UseCase de Login
+    const onSubmit = async (data: LoginFormValues) => {
+        try {
+            setError(null);
+            setLoading(true);
+            await login({ email: data.email, password: data.password });
+            navigate('/');
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -143,11 +158,18 @@ export function LoginPage() {
                             </label>
                         </div>
 
+                        {error && (
+                            <div className="bg-danger-soft border border-danger/20 text-danger text-[13px] p-3 rounded-sm font-medium">
+                                ⚠️ {error}
+                            </div>
+                        )}
+
                         <button
                             type="submit"
-                            className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px]"
+                            disabled={loading}
+                            className="w-full bg-accent text-[#0f1117] font-bold py-3 px-4 rounded-sm shadow-[0_2px_8px_rgba(232,168,56,0.3)] hover:bg-accent-dark hover:-translate-y-px transition-all flex items-center justify-center gap-2 text-[14px] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                         >
-                            Entrar no sistema →
+                            {loading ? 'Entrando...' : 'Entrar no sistema →'}
                         </button>
 
                         <div className="relative flex items-center justify-center py-2">

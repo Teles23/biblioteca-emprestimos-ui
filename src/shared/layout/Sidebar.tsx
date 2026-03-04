@@ -9,17 +9,25 @@ interface NavItem {
     roles?: string[];
 }
 
-const navItems: NavItem[] = [
-    { id: 'dashboard', icon: '⊞', label: 'Dashboard', href: '/' },
-    { id: 'livros', icon: '📚', label: 'Livros', href: '/livros' },
-    { id: 'autores', icon: '✍️', label: 'Autores', href: '/autores' },
-    { id: 'categorias', icon: '🏷️', label: 'Categorias', href: '/categorias' },
-    { id: 'usuarios', icon: '👥', label: 'Usuários', href: '/usuarios' },
-    { id: 'emprestimos', icon: '📖', label: 'Empréstimos', href: '/emprestimos', badge: '3' },
-    { id: 'historico', icon: '🕐', label: 'Histórico', href: '/historico' },
+const menuItems = [
+    { path: '/', label: 'Dashboard', icon: '📊' },
+    { path: '/livros', label: 'Livros', icon: '📚' },
+    { path: '/autores', label: 'Autores', icon: '✍️' },
+    { path: '/categorias', label: 'Categorias', icon: '🏷️' },
+    { path: '/usuarios', label: 'Usuários', icon: '👥', adminOnly: true },
+    { path: '/emprestimos', label: 'Empréstimos', icon: '🤝' },
+    { path: '/historico', label: 'Histórico', icon: '📜' },
 ];
 
 export function Sidebar() {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <aside className="fixed top-0 left-0 bottom-0 w-sidebar bg-sidebar-bg flex flex-col z-[100] border-r border-white/5">
             <div className="h-header flex items-center gap-2.5 px-5 border-b border-white/5 shrink-0">
@@ -52,37 +60,50 @@ export function Sidebar() {
                         {item.label}
                         {item.badge && (
                             <span className="ml-auto bg-danger text-white text-[10px] font-bold rounded-full px-1.5 min-w-[18px] text-center">
-                                {item.badge}
-                            </span>
-                        )}
-                    </NavLink>
-                ))}
 
-                <div className="text-[10px] font-semibold tracking-widest uppercase text-sidebar-text opacity-50 px-2.5 py-3 pt-3 pb-1.5 mt-2">
-                    Conta
-                </div>
-
-                <NavLink
-                    to="/login"
-                    className="flex items-center gap-2.5 p-2 px-2.5 rounded-sm text-sidebar-text no-underline text-[13.5px] font-medium transition-all mb-0.5 hover:bg-white/5 hover:text-sidebar-active"
-                >
-                    <span className="w-[18px] text-[15px] text-center shrink-0 opacity-90">🚪</span>
-                    Sair
-                </NavLink>
+                                return (
+                                <li key={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all text-[13.5px] font-medium ${isActive
+                                                ? 'bg-accent text-[#0f1117] shadow-[0_2px_8px_rgba(232,168,56,0.2)]'
+                                                : 'text-sidebar-text hover:bg-white/5 hover:text-white'
+                                            }`
+                                        }
+                                    >
+                                        <span className="text-[16px]">{item.icon}</span>
+                                        {item.label}
+                                    </NavLink>
+                                </li>
+                                );
+                    })}
+                            </ul>
             </nav>
 
-            <div className="p-3 px-2.5 border-t border-white/5">
-                <div className="flex items-center gap-2.5 p-2.5 rounded-sm cursor-pointer hover:bg-white/5 transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-dark flex items-center justify-center text-[12px] font-bold text-sidebar-bg shrink-0">
-                        AD
+            {/* USER & LOGOUT */ }
+                    < div className = "p-4 border-t border-white/5 bg-black/20" >
+                <div className="flex items-center gap-3 mb-4 px-1">
+                    <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-[12px] font-bold text-[#0f1117]">
+                        {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
                     </div>
-                    <div className="flex-1 min-w-0">
-                        <div className="text-[12.5px] font-semibold text-white whitespace-nowrap overflow-hidden text-ellipsis">
-                            Admin Sistema
-                        </div>
-                        <div className="text-[10px] text-sidebar-text">ROLE_ADMIN</div>
+                    <div className="flex flex-col min-w-0">
+                        <span className="text-[13px] font-bold text-white truncate leading-none mb-1">
+                            {user?.name || 'Administrador'}
+                        </span>
+                        <span className="text-[10px] text-sidebar-text truncate">
+                            {user?.roles.includes('ROLE_ADMIN') ? 'Admin Master' : 'Leitor'}
+                        </span>
                     </div>
                 </div>
+
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-[12.5px] font-medium text-danger hover:bg-danger/10 rounded-sm transition-all group"
+                >
+                    <span className="text-[15px] group-hover:scale-110 transition-transform">🚪</span>
+                    Sair do sistema
+                </button>
             </div>
         </aside>
     );

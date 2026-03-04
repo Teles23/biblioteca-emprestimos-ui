@@ -1,7 +1,8 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { AppLayout } from '../shared/layout/AppLayout';
 import { LoginPage } from '../modules/auth/presentation/pages/LoginPage';
 import { RegisterPage } from '../modules/auth/presentation/pages/RegisterPage';
+import { PrivateRoute } from './PrivateRoute';
 
 // Temporary Mock Page for testing layout
 const MockPage = ({ title }: { title: string }) => (
@@ -15,46 +16,62 @@ const MockPage = ({ title }: { title: string }) => (
 
 export const router = createBrowserRouter([
     {
-        path: '/',
-        element: <AppLayout />,
-        children: [
-            {
-                path: '/',
-                element: <MockPage title="Dashboard" />,
-            },
-            {
-                path: '/livros',
-                element: <MockPage title="Livros" />,
-            },
-            {
-                path: '/autores',
-                element: <MockPage title="Autores" />,
-            },
-            {
-                path: '/categorias',
-                element: <MockPage title="Categorias" />,
-            },
-            {
-                path: '/usuarios',
-                element: <MockPage title="Usuários" />,
-            },
-            {
-                path: '/emprestimos',
-                element: <MockPage title="Empréstimos" />,
-            },
-            {
-                path: '/historico',
-                element: <MockPage title="Histórico" />,
-            },
-        ],
-    },
-    {
         path: '/login',
         element: <LoginPage />,
     },
     {
         path: '/register',
         element: <RegisterPage />,
+    },
+    {
+        element: <PrivateRoute />,
+        children: [
+            {
+                path: '/',
+                element: <AppLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <MockPage title="Dashboard" />,
+                    },
+                    {
+                        path: 'livros',
+                        element: <MockPage title="Livros" />,
+                    },
+                    {
+                        path: 'autores',
+                        element: <MockPage title="Autores" />,
+                    },
+                    {
+                        path: 'categorias',
+                        element: <MockPage title="Categorias" />,
+                    },
+                    {
+                        path: 'emprestimos',
+                        element: <MockPage title="Emprestimos" />,
+                    },
+                    {
+                        path: 'historico',
+                        element: <MockPage title="Histórico" />,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        element: <PrivateRoute requiredRole="ROLE_ADMIN" />,
+        children: [
+            {
+                path: '/',
+                element: <AppLayout />,
+                children: [
+                    {
+                        path: 'usuarios',
+                        element: <MockPage title="Configurações de Usuários" />,
+                    },
+                ],
+            },
+        ],
     },
     {
         path: '*',
