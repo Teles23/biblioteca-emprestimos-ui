@@ -33,7 +33,7 @@ export function CadastroCategoriaPage() {
             async function loadCategory() {
                 try {
                     const category = await repository.findById(id);
-                    setValue('name', category.name);
+                    setValue('name', category.name || '');
                 } catch (err: any) {
                     setError('Erro ao carregar dados da categoria.');
                 }
