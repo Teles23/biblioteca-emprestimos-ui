@@ -1,15 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 
-const categorySchema = z.object({
-    name: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
-});
-
-type CategoryFormValues = z.infer<typeof categorySchema>;
+import { categorySchema, type CategoryFormValues } from '../schemas/category.schema';
 
 export function CadastroCategoriaPage() {
     const { id } = useParams();

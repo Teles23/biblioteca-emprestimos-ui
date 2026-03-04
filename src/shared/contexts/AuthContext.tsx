@@ -21,6 +21,8 @@ interface AuthContextData {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
+const authRepository = new AuthRepositoryImpl();
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserInfo | null>(() => {
         const storagedUser = localStorage.getItem('@LibraManager:user');
@@ -31,14 +33,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return localStorage.getItem('@LibraManager:token');
     });
 
-    const authRepository = new AuthRepositoryImpl();
-
     const login = useCallback(async (credentials: LoginCredentials) => {
         const response = await authRepository.login(credentials);
 
         const userInfo: UserInfo = {
             ...response.user,
-            name: response.user.name || credentials.email.split('@')[0], // Fallback name
+            name: response.user.name || credentials.email.split('@')[0],
         };
 
         setUser(userInfo);

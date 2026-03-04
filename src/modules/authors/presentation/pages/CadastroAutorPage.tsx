@@ -1,16 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AuthorRepositoryImpl } from '../../infrastructure/AuthorRepositoryImpl';
 
-const authorSchema = z.object({
-    name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
-    biography: z.string().optional(),
-});
-
-type AuthorFormValues = z.infer<typeof authorSchema>;
+import { authorSchema, type AuthorFormValues } from '../schemas/author.schema';
 
 export function CadastroAutorPage() {
     const { id } = useParams();
@@ -35,7 +29,7 @@ export function CadastroAutorPage() {
                 try {
                     const author = await repository.findById(id);
                     setValue('name', author.name);
-                    if (author.biography) setValue('biography', author.biography);
+                    setValue('biography', author.biography || '');
                 } catch (err: any) {
                     setError('Erro ao carregar dados do autor.');
                 }

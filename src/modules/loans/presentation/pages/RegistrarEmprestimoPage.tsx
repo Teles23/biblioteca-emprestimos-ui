@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
@@ -8,12 +7,7 @@ import { BookRepositoryImpl } from '../../../books/infrastructure/BookRepository
 import { UserRepositoryImpl } from '../../../users/infrastructure/UserRepositoryImpl';
 import type { Book, User } from '../../../../shared/types';
 
-const loanSchema = z.object({
-    bookId: z.string().min(1, 'Selecione um livro'),
-    userId: z.string().min(1, 'Selecione um leitor'),
-});
-
-type LoanFormValues = z.infer<typeof loanSchema>;
+import { loanSchema, type LoanFormValues } from '../schemas/loan.schema';
 
 export function RegistrarEmprestimoPage() {
     const navigate = useNavigate();
