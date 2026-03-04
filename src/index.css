@@ -105,11 +105,11 @@
   }
 
   .data-table thead th {
-    @apply py-3 px-4 text-left text-[11px] font-bold uppercase tracking-wider text-text-secondary bg-surface-2 border-bottom border-border;
+    @apply py-3 px-4 text-left text-[11px] font-bold uppercase tracking-wider text-text-secondary bg-surface-2 border-b border-border;
   }
 
   .data-table tbody tr {
-    @apply border-bottom border-surface-3 hover:bg-surface-2 transition-colors;
+    @apply border-b border-surface-3 hover:bg-surface-2 transition-colors;
   }
 
   .data-table td {
