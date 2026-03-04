@@ -4,12 +4,16 @@ import { LoginPage } from '../modules/auth/presentation/pages/LoginPage';
 import { RegisterPage } from '../modules/auth/presentation/pages/RegisterPage';
 import { LivrosPage } from '../modules/books/presentation/pages/LivrosPage';
 import { CadastroLivroPage } from '../modules/books/presentation/pages/CadastroLivroPage';
+import { AutoresPage } from '../modules/authors/presentation/pages/AutoresPage';
+import { CadastroAutorPage } from '../modules/authors/presentation/pages/CadastroAutorPage';
+import { CategoriasPage } from '../modules/categories/presentation/pages/CategoriasPage';
+import { CadastroCategoriaPage } from '../modules/categories/presentation/pages/CadastroCategoriaPage';
 import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
 import { PrivateRoute } from './PrivateRoute';
 
 // Temporary Mock Page for testing layout
 const MockPage = ({ title }: { title: string }) => (
-    <div className="page-header">
+    <div className="page-header px-6 py-8">
         <div className="page-header-left">
             <h1 className="text-[22px] font-bold tracking-tight text-text-primary">{title}</h1>
             <p className="text-[13px] text-text-secondary mt-0.5">Módulo em desenvolvimento</p>
@@ -73,11 +77,24 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: 'categorias',
-                        element: <MockPage title="Categorias" />,
+                        children: [
+                            {
+                                index: true,
+                                element: <CategoriasPage />,
+                            },
+                            {
+                                path: 'nova',
+                                element: <CadastroCategoriaPage />,
+                            },
+                            {
+                                path: ':id/editar',
+                                element: <CadastroCategoriaPage />,
+                            },
+                        ],
                     },
                     {
                         path: 'emprestimos',
-                        element: <MockPage title="Emprestimos" />,
+                        element: <MockPage title="Empréstimos" />,
                     },
                     {
                         path: 'historico',

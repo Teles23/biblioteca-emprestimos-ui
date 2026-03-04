@@ -1,5 +1,5 @@
-import { httpClient } from '../../../../shared/infra/httpClient';
-import type { Author } from '../../../../shared/types';
+import { httpClient } from '../../../shared/infra/httpClient';
+import type { Author } from '../../../shared/types';
 
 export interface CreateAuthorDTO {
     name: string;
