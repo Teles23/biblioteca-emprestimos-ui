@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import type { Loan } from '../../../../shared/types';
 import { format } from 'date-fns';
@@ -9,7 +9,7 @@ export function MeusEmprestimosPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new LoanRepositoryImpl();
+    const repository = useMemo(() => new LoanRepositoryImpl(), []);
 
     const loadMyLoans = useCallback(async () => {
         try {
@@ -86,7 +86,7 @@ export function MeusEmprestimosPage() {
                                     </td>
                                     <td>
                                         <span className={`badge ${loan.status === 'OVERDUE' ? 'badge-danger' :
-                                                loan.status === 'RETURNED' ? 'badge-success' : 'badge-warning'
+                                            loan.status === 'RETURNED' ? 'badge-success' : 'badge-warning'
                                             }`}>
                                             {loan.status === 'OVERDUE' ? '● Em Atraso' :
                                                 loan.status === 'RETURNED' ? '● Devolvido' : '● Com você'}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import type { Loan } from '../../../../shared/types';
 
@@ -9,20 +9,22 @@ export function HistoricoPage() {
 
     const repository = new LoanRepositoryImpl();
 
-    useEffect(() => {
-        async function loadHistory() {
-            try {
-                setLoading(true);
-                const data = await repository.history({});
-                setHistory(data);
-            } catch (err) {
-                setError('Erro ao carregar histórico.');
-            } finally {
-                setLoading(false);
-            }
+    const fetchHistory = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await repository.history({});
+            setHistory(data);
+        } catch (err: unknown) {
+            console.error('Erro ao carregar histórico:', err);
+            setError('Erro ao carregar histórico.');
+        } finally {
+            setLoading(false);
         }
-        loadHistory();
-    }, []);
+    }, [repository]);
+
+    useEffect(() => {
+        fetchHistory();
+    }, [fetchHistory]);
 
     return (
         <div className="animate-in fade-in duration-500">
@@ -82,7 +84,7 @@ export function HistoricoPage() {
                                     <td>
                                         <div className="flex flex-col gap-1.5">
                                             <span className={`badge ${loan.status === 'RETURNED' ? 'badge-success' :
-                                                    loan.status === 'OVERDUE' ? 'badge-danger' : 'badge-warning'
+                                                loan.status === 'OVERDUE' ? 'badge-danger' : 'badge-warning'
                                                 }`}>
                                                 {loan.status === 'RETURNED' ? 'Devolvido' :
                                                     loan.status === 'OVERDUE' ? 'Em Atraso' : 'Ativo'}

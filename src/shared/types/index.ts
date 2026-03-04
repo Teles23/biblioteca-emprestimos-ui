@@ -43,7 +43,7 @@ export interface Loan {
     returnDate: string | null;
     status: 'ACTIVE' | 'RETURNED' | 'OVERDUE';
     lateDays: number;
-    book?: { id: string; title: string };
+    book?: { id: string; title: string; category?: { name: string } };
     user?: { id: string; name: string; email: string };
     createdAt: string;
     updatedAt: string;

@@ -1,6 +1,7 @@
 import { useLoans } from '../hooks/useLoans';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error'; // Added import for getErrorMessage
 
 export function EmprestimosPage() {
     const { loans, loading, error, fetchActiveLoans, returnBook } = useLoans();
@@ -12,7 +13,14 @@ export function EmprestimosPage() {
 
     const handleReturn = async (id: string) => {
         if (window.confirm('Confirmar devolução do livro?')) {
-            await returnBook(id);
+            try { // Added try-catch block for returnBook
+                await returnBook(id);
+            } catch (err: unknown) {
+                // Assuming a mechanism to display errors in the UI,
+                // or that returnBook itself handles setting the error state in useLoans.
+                // For now, we'll just log it, as setError is not defined in this component.
+                console.error("Error returning book:", getErrorMessage(err, 'Erro ao devolver livro.'));
+            }
         }
     };
 
@@ -72,7 +80,7 @@ export function EmprestimosPage() {
                     <select
                         className="bg-surface border border-border rounded-[6px] px-3 py-2 text-[12.5px] outline-none"
                         value={filter}
-                        onChange={(e) => setFilter(e.target.value as any)}
+                        onChange={(e) => setFilter(e.target.value as 'ALL' | 'ACTIVE' | 'OVERDUE')} // Removed 'any' type cast
                     >
                         <option value="ALL">Todos os status</option>
                         <option value="ACTIVE">Ativos</option>
@@ -102,6 +110,12 @@ export function EmprestimosPage() {
                                     </td>
                                 </tr>
                             ))
+                        ) : error ? (
+                            <tr>
+                                <td colSpan={6} className="py-12 text-center text-danger">
+                                    {error}
+                                </td>
+                            </tr>
                         ) : filteredLoans.length > 0 ? (
                             filteredLoans.map((loan) => (
                                 <tr key={loan.id} className={loan.status === 'OVERDUE' ? 'bg-danger/[0.03]' : ''}>

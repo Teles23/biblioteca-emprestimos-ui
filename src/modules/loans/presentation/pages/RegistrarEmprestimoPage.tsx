@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import { BookRepositoryImpl } from '../../../books/infrastructure/BookRepositoryImpl';
 import { UserRepositoryImpl } from '../../../users/infrastructure/UserRepositoryImpl';
@@ -18,9 +19,9 @@ export function RegistrarEmprestimoPage() {
     const [books, setBooks] = useState<Book[]>([]);
     const [users, setUsers] = useState<User[]>([]);
 
-    const loanRepo = new LoanRepositoryImpl();
-    const bookRepo = new BookRepositoryImpl();
-    const userRepo = new UserRepositoryImpl();
+    const loanRepo = useMemo(() => new LoanRepositoryImpl(), []);
+    const bookRepo = useMemo(() => new BookRepositoryImpl(), []);
+    const userRepo = useMemo(() => new UserRepositoryImpl(), []);
 
     const {
         register,
@@ -31,23 +32,23 @@ export function RegistrarEmprestimoPage() {
     });
 
     useEffect(() => {
-        async function loadData() {
+        const loadData = async () => {
             try {
+                setDataLoading(true);
                 const [booksData, usersData] = await Promise.all([
                     bookRepo.list(),
                     userRepo.list()
                 ]);
-                // Apenas livros disponíveis
-                setBooks(booksData.filter(b => b.status === 'AVAILABLE'));
+                setBooks(booksData);
                 setUsers(usersData);
-            } catch (err) {
-                setError('Erro ao carregar dados auxiliares.');
+            } catch {
+                setError('Erro ao carregar dados necessários.');
             } finally {
                 setDataLoading(false);
             }
-        }
+        };
         loadData();
-    }, []);
+    }, [bookRepo, userRepo]);
 
     const onSubmit = async (data: LoanFormValues) => {
         try {
@@ -55,8 +56,8 @@ export function RegistrarEmprestimoPage() {
             setError(null);
             await loanRepo.create(data);
             navigate('/emprestimos');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao registrar empréstimo.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao processar.'));
         } finally {
             setLoading(false);
         }
