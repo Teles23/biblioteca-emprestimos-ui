@@ -63,69 +63,71 @@ export function RegistrarEmprestimoPage() {
     };
 
     return (
-        <div className="p-6 max-w-[700px] mx-auto animate-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8">
-                <Link to="/emprestimos" className="text-[12px] text-accent hover:underline mb-2 inline-block">
-                    ← Voltar para empréstimos
+        <div className="animate-in fade-in duration-500">
+            <div className="page-header">
+                <div className="page-header-left">
+                    <h1>Registrar Novo Empréstimo 🤝</h1>
+                    <p>Preencha os dados abaixo para vincular um livro a um leitor</p>
+                </div>
+                <Link to="/emprestimos" className="btn btn-secondary">
+                    ← Voltar
                 </Link>
-                <h1 className="text-[24px] font-extrabold text-white tracking-tight">
-                    Registrar Novo Empréstimo 🤝
-                </h1>
             </div>
 
-            <div className="bg-surface border border-border rounded-lg p-8 shadow-xl">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="flex flex-col gap-1.5">
-                        <label className="text-[12px] font-semibold text-text-primary tracking-wide">Selecione o Livro</label>
-                        <select
-                            {...register('bookId')}
-                            className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent appearance-none transition-all ${errors.bookId ? 'border-danger' : ''}`}
-                        >
-                            <option value="">Selecione um exemplar disponível...</option>
-                            {books.map(book => (
-                                <option key={book.id} value={book.id}>{book.title}</option>
-                            ))}
-                        </select>
-                        {errors.bookId && <span className="text-[11px] text-danger font-medium">{errors.bookId.message}</span>}
-                    </div>
+            <div className="card max-w-[800px]">
+                <div className="card-header">
+                    <div className="card-title">Dados da Transação</div>
+                </div>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-grid">
+                            <div className="form-group span-2">
+                                <label>Livro Disponível <span className="req">*</span></label>
+                                <select
+                                    {...register('bookId')}
+                                    className={errors.bookId ? 'border-danger' : ''}
+                                >
+                                    <option value="">Selecione um exemplar...</option>
+                                    {books.map(book => (
+                                        <option key={book.id} value={book.id}>{book.title}</option>
+                                    ))}
+                                </select>
+                                {errors.bookId && <span className="text-[11px] text-danger mt-1">{errors.bookId.message}</span>}
+                            </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <label className="text-[12px] font-semibold text-text-primary tracking-wide">Selecione o Leitor / Usuário</label>
-                        <select
-                            {...register('userId')}
-                            className={`p-2.5 bg-surface-2 border border-border rounded-sm text-[13.5px] w-full outline-none focus:border-accent appearance-none transition-all ${errors.userId ? 'border-danger' : ''}`}
-                        >
-                            <option value="">Selecione o usuário...</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
-                            ))}
-                        </select>
-                        {errors.userId && <span className="text-[11px] text-danger font-medium">{errors.userId.message}</span>}
-                    </div>
-
-                    <div className="p-4 bg-accent/5 border border-accent/10 rounded-sm">
-                        <p className="text-[12px] text-accent leading-relaxed">
-                            <strong>Observação:</strong> O prazo de devolução padrão é de <span className="font-bold underline">14 dias</span> a partir de hoje.
-                        </p>
-                    </div>
-
-                    {error && (
-                        <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[13px] font-medium">
-                            ⚠️ {error}
+                            <div className="form-group span-2">
+                                <label>Leitor / Usuário <span className="req">*</span></label>
+                                <select
+                                    {...register('userId')}
+                                    className={errors.userId ? 'border-danger' : ''}
+                                >
+                                    <option value="">Selecione quem está retirando...</option>
+                                    {users.map(user => (
+                                        <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
+                                    ))}
+                                </select>
+                                {errors.userId && <span className="text-[11px] text-danger mt-1">{errors.userId.message}</span>}
+                            </div>
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
-                        <Link to="/emprestimos" className="text-[13px] font-bold text-text-muted hover:text-white transition-colors">Cancelar</Link>
-                        <button
-                            type="submit"
-                            disabled={loading || dataLoading}
-                            className="bg-accent text-[#0f1117] px-8 py-2.5 rounded-sm font-bold text-[14px] hover:bg-accent-dark transition-all shadow-[0_4px_12px_rgba(232,168,56,0.3)] disabled:opacity-50"
-                        >
-                            {loading ? 'Processando...' : 'Confirmar Empréstimo'}
-                        </button>
-                    </div>
-                </form>
+                        <div className="alert alert-info mt-6">
+                            ℹ️ O prazo de devolução é calculado automaticamente para <strong>14 dias</strong> a partir de hoje.
+                        </div>
+
+                        {error && (
+                            <div className="alert alert-info mt-4 bg-danger/10 text-danger border-danger/20">
+                                ⚠️ {error}
+                            </div>
+                        )}
+
+                        <div className="form-actions mt-8">
+                            <button type="submit" disabled={loading || dataLoading} className="btn btn-primary">
+                                {loading ? 'Processando...' : 'Confirmar Empréstimo'}
+                            </button>
+                            <Link to="/emprestimos" className="btn btn-secondary">Cancelar</Link>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );
