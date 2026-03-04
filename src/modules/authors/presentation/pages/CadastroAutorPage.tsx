@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { AuthorRepositoryImpl } from '../../infrastructure/AuthorRepositoryImpl';
+import { getErrorMessage } from '../../../../shared/utils/error';
 
 import { authorSchema, type AuthorFormValues } from '../schemas/author.schema';
 
@@ -12,7 +13,7 @@ export function CadastroAutorPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new AuthorRepositoryImpl();
+    const repository = useMemo(() => new AuthorRepositoryImpl(), []);
 
     const {
         register,
@@ -25,18 +26,18 @@ export function CadastroAutorPage() {
 
     useEffect(() => {
         if (id) {
-            async function loadAuthor() {
+            const loadAuthor = async () => {
                 try {
-                    const author = await repository.findById(id);
-                    setValue('name', author.name || '');
-                    setValue('biography', author.biography || '');
-                } catch (err: any) {
+                    const data = await repository.findById(id);
+                    setValue('name', data.name);
+                    setValue('biography', data.biography || '');
+                } catch {
                     setError('Erro ao carregar dados do autor.');
                 }
-            }
+            };
             loadAuthor();
         }
-    }, [id]);
+    }, [id, repository, setValue]);
 
     const onSubmit = async (data: AuthorFormValues) => {
         try {
@@ -48,8 +49,8 @@ export function CadastroAutorPage() {
                 await repository.create(data);
             }
             navigate('/autores');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao salvar autor.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao salvar.'));
         } finally {
             setLoading(false);
         }
