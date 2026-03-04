@@ -10,7 +10,7 @@ import type { Author, Category } from '../../../../shared/types';
 
 const bookSchema = z.object({
     title: z.string().min(3, 'Título deve ter no mínimo 3 caracteres'),
-    publicationYear: z.coerce.number()
+    publicationYear: z.number()
         .min(1500, 'Ano inválido')
         .max(new Date().getFullYear() + 1, 'Ano futuro não permitido'),
     categoryId: z.string().min(1, 'Selecione uma categoria'),

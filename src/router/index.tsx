@@ -56,7 +56,20 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: 'autores',
-                        element: <MockPage title="Autores" />,
+                        children: [
+                            {
+                                index: true,
+                                element: <AutoresPage />,
+                            },
+                            {
+                                path: 'novo',
+                                element: <CadastroAutorPage />,
+                            },
+                            {
+                                path: ':id/editar',
+                                element: <CadastroAutorPage />,
+                            },
+                        ],
                     },
                     {
                         path: 'categorias',
