@@ -1,29 +1,12 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import type { LoginCredentials, RegisterCredentials } from '../../modules/auth/application/dtos/auth.dto';
+import { useState, useCallback, useMemo, type ReactNode } from 'react';
 import { AuthRepositoryImpl } from '../../modules/auth/infrastructure/AuthRepositoryImpl';
-
-interface UserInfo {
-    id: string;
-    email: string;
-    roles: string[];
-    name?: string;
-}
-
-interface AuthContextData {
-    user: UserInfo | null;
-    token: string | null;
-    isAuthenticated: boolean;
-    isAdmin: boolean;
-    login(credentials: LoginCredentials): Promise<void>;
-    register(credentials: RegisterCredentials): Promise<void>;
-    logout(): void;
-}
-
-const AuthContext = createContext<AuthContextData>({} as AuthContextData);
-
-const authRepository = new AuthRepositoryImpl();
+import { AuthContext } from './AuthContextInstance';
+import type { LoginCredentials, RegisterCredentials } from '../../modules/auth/application/dtos/auth.dto';
+import type { UserInfo } from '../types/auth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const authRepository = useMemo(() => new AuthRepositoryImpl(), []);
+
     const [user, setUser] = useState<UserInfo | null>(() => {
         const storagedUser = localStorage.getItem('@LibraManager:user');
         return storagedUser ? JSON.parse(storagedUser) : null;
@@ -46,11 +29,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         localStorage.setItem('@LibraManager:token', response.accessToken);
         localStorage.setItem('@LibraManager:user', JSON.stringify(userInfo));
-    }, []);
+    }, [authRepository]);
 
     const register = useCallback(async (credentials: RegisterCredentials) => {
         await authRepository.register(credentials);
-    }, []);
+    }, [authRepository]);
 
     const logout = useCallback(() => {
         setUser(null);
@@ -74,12 +57,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             {children}
         </AuthContext.Provider>
     );
-}
-
-export function useAuth(): AuthContextData {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth deve ser usado dentro de um AuthProvider');
-    }
-    return context;
 }
