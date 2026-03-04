@@ -27,6 +27,11 @@ export class LoanRepositoryImpl implements ILoanRepository {
         return response.data;
     }
 
+    async listMyLoans(): Promise<Loan[]> {
+        const response = await httpClient.get<Loan[]>('/loans/me');
+        return response.data;
+    }
+
     async history(filters: { userId?: string; bookId?: string }): Promise<Loan[]> {
         const response = await httpClient.get<Loan[]>('/loans/history', {
             params: filters

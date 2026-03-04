@@ -11,17 +11,13 @@ import { CadastroCategoriaPage } from '../modules/categories/presentation/pages/
 import { UsuariosPage } from '../modules/users/presentation/pages/UsuariosPage';
 import { CadastroUsuarioPage } from '../modules/users/presentation/pages/CadastroUsuarioPage';
 import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
+import { EmprestimosPage } from '../modules/loans/presentation/pages/EmprestimosPage';
+import { HistoricoPage } from '../modules/loans/presentation/pages/HistoricoPage';
+import { RegistrarEmprestimoPage } from '../modules/loans/presentation/pages/RegistrarEmprestimoPage';
+import { MeusEmprestimosPage } from '../modules/loans/presentation/pages/MeusEmprestimosPage';
 import { PrivateRoute } from './PrivateRoute';
 
-// Temporary Mock Page for testing layout
-const MockPage = ({ title }: { title: string }) => (
-    <div className="page-header px-6 py-8">
-        <div className="page-header-left">
-            <h1 className="text-[22px] font-bold tracking-tight text-white">{title}</h1>
-            <p className="text-[13px] text-text-secondary mt-0.5">Módulo em desenvolvimento</p>
-        </div>
-    </div>
-);
+
 
 export const router = createBrowserRouter([
     {
@@ -95,12 +91,25 @@ export const router = createBrowserRouter([
                         ],
                     },
                     {
+                        path: 'meus-emprestimos',
+                        element: <MeusEmprestimosPage />,
+                    },
+                    {
                         path: 'emprestimos',
-                        element: <MockPage title="Empréstimos" />,
+                        children: [
+                            {
+                                index: true,
+                                element: <EmprestimosPage />,
+                            },
+                            {
+                                path: 'novo',
+                                element: <RegistrarEmprestimoPage />,
+                            },
+                        ],
                     },
                     {
                         path: 'historico',
-                        element: <MockPage title="Histórico" />,
+                        element: <HistoricoPage />,
                     },
                 ],
             },

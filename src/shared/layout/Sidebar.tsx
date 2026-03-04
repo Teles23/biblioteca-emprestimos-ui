@@ -7,8 +7,9 @@ const menuItems = [
     { path: '/autores', label: 'Autores', icon: '✍️' },
     { path: '/categorias', label: 'Categorias', icon: '🏷️' },
     { path: '/usuarios', label: 'Usuários', icon: '👥', adminOnly: true },
-    { path: '/emprestimos', label: 'Empréstimos', icon: '🤝' },
-    { path: '/historico', label: 'Histórico', icon: '📜' },
+    { path: '/meus-emprestimos', label: 'Meus Empréstimos', icon: '📖' },
+    { path: '/emprestimos', label: 'Empréstimos', icon: '🤝', adminOnly: true },
+    { path: '/historico', label: 'Histórico', icon: '📜', adminOnly: true },
 ];
 
 export function Sidebar() {
