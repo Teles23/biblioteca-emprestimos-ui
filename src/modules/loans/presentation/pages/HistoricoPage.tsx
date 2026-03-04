@@ -6,7 +6,6 @@ import type { Loan } from '../../../../shared/types';
 export function HistoricoPage() {
     const [history, setHistory] = useState<Loan[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     const repository = new LoanRepositoryImpl();
 
@@ -66,8 +65,8 @@ export function HistoricoPage() {
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col gap-1">
                                             <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm w-fit border ${loan.status === 'RETURNED' ? 'bg-success/10 border-success/20 text-success' :
-                                                    loan.status === 'OVERDUE' ? 'bg-danger/10 border-danger/20 text-danger' :
-                                                        'bg-accent/10 border-accent/20 text-accent'
+                                                loan.status === 'OVERDUE' ? 'bg-danger/10 border-danger/20 text-danger' :
+                                                    'bg-accent/10 border-accent/20 text-accent'
                                                 }`}>
                                                 {loan.status}
                                             </span>

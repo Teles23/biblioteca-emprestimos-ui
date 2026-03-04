@@ -1,10 +1,11 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import type { Loan } from '../../../../shared/types';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 
 export function useLoans() {
     const [loans, setLoans] = useState<Loan[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const repository = new LoanRepositoryImpl();

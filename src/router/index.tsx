@@ -13,6 +13,16 @@ import { CadastroUsuarioPage } from '../modules/users/presentation/pages/Cadastr
 import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
 import { PrivateRoute } from './PrivateRoute';
 
+// Temporary Mock Page for testing layout
+const MockPage = ({ title }: { title: string }) => (
+    <div className="page-header px-6 py-8">
+        <div className="page-header-left">
+            <h1 className="text-[22px] font-bold tracking-tight text-white">{title}</h1>
+            <p className="text-[13px] text-text-secondary mt-0.5">Módulo em desenvolvimento</p>
+        </div>
+    </div>
+);
+
 export const router = createBrowserRouter([
     {
         path: '/login',

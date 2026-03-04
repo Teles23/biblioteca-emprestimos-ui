@@ -34,6 +34,21 @@ export interface Category {
     updatedAt: string;
 }
 
+export interface Loan {
+    id: string;
+    bookId: string;
+    userId: string;
+    loanDate: string;
+    dueDate: string;
+    returnDate: string | null;
+    status: 'ACTIVE' | 'RETURNED' | 'OVERDUE';
+    lateDays: number;
+    book?: { id: string; title: string };
+    user?: { id: string; name: string; email: string };
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface Book {
     id: string;
     title: string;
