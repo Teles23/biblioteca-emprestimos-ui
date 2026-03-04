@@ -1,7 +1,8 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { UserRepositoryImpl } from '../../infrastructure/UserRepositoryImpl';
 
 import { userSchema, type UserFormValues } from '../schemas/user.schema';
@@ -40,8 +41,8 @@ export function CadastroUsuarioPage() {
             });
 
             navigate('/usuarios');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao cadastrar usuário.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao salvar usuário.'));
         } finally {
             setLoading(false);
         }
@@ -59,7 +60,7 @@ export function CadastroUsuarioPage() {
             </div>
 
             <div className="bg-surface border border-border rounded-lg p-8 shadow-xl">
-                <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-[12px] font-semibold text-text-primary tracking-wide">Nome Completo</label>
                         <input

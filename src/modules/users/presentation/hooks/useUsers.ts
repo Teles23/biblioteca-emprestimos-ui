@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import type { User } from '../../../../shared/types';
 import { UserRepositoryImpl } from '../../infrastructure/UserRepositoryImpl';
 
@@ -7,7 +8,7 @@ export function useUsers() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new UserRepositoryImpl();
+    const repository = useMemo(() => new UserRepositoryImpl(), []);
 
     const fetchUsers = useCallback(async () => {
         try {
@@ -15,23 +16,26 @@ export function useUsers() {
             setError(null);
             const data = await repository.list();
             setUsers(data);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao carregar usuários.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao carregar usuários.'));
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [repository]);
 
     const deleteUser = useCallback(async (id: string) => {
         try {
             await repository.delete(id);
             setUsers((prev) => prev.filter((u) => u.id !== id));
             return true;
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao excluir usuário.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro.'));
             return false;
+        } finally {
+            setLoading(false);
         }
-    }, []);
+        return true;
+    }, [repository]);
 
     useEffect(() => {
         fetchUsers();
