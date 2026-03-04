@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import type { Book } from '../../../../shared/types';
 import { BookRepositoryImpl } from '../../infrastructure/BookRepositoryImpl';
 
@@ -7,7 +8,7 @@ export function useBooks() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new BookRepositoryImpl();
+    const repository = useMemo(() => new BookRepositoryImpl(), []);
 
     const fetchBooks = useCallback(async () => {
         try {
@@ -15,23 +16,23 @@ export function useBooks() {
             setError(null);
             const data = await repository.list();
             setBooks(data);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao carregar livros. Tente novamente.');
+        } catch {
+            setError(getErrorMessage(null, 'Erro ao carregar livros.'));
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [repository]);
 
     const deleteBook = useCallback(async (id: string) => {
         try {
             await repository.delete(id);
             setBooks((prev) => prev.filter((book) => book.id !== id));
             return true;
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao excluir livro.');
+        } catch {
+            setError(getErrorMessage(null, 'Erro ao excluir livro.'));
             return false;
         }
-    }, []);
+    }, [repository]);
 
     useEffect(() => {
         fetchBooks();

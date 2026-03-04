@@ -7,7 +7,7 @@ export interface CreateBookDTO {
     authorIds: string[];
 }
 
-export interface UpdateBookDTO extends Partial<CreateBookDTO> { }
+export type UpdateBookDTO = Partial<CreateBookDTO>;
 
 export interface IBookRepository {
     list(): Promise<Book[]>;

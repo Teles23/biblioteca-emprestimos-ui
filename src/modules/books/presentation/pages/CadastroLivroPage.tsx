@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { BookRepositoryImpl } from '../../infrastructure/BookRepositoryImpl';
 import { AuthorRepositoryImpl } from '../../../authors/infrastructure/AuthorRepositoryImpl';
 import { CategoryRepositoryImpl } from '../../../categories/infrastructure/CategoryRepositoryImpl';
@@ -38,28 +39,45 @@ export function CadastroLivroPage() {
     const selectedAuthorIds = watch('authorIds');
 
     useEffect(() => {
-        async function loadData() {
-            try {
-                const [authorsData, categoriesData] = await Promise.all([
-                    authorRepo.list(),
-                    categoryRepo.list()
-                ]);
-                setAuthors(authorsData);
-                setCategories(categoriesData);
+        if (id) {
+            const loadData = async () => {
+                try {
+                    setLoading(true);
+                    const [bookData, authorsData, categoriesData] = await Promise.all([
+                        bookRepo.findById(id),
+                        authorRepo.list(),
+                        categoryRepo.list()
+                    ]);
+                    setAuthors(authorsData);
+                    setCategories(categoriesData);
 
-                if (id) {
-                    const book = await bookRepo.findById(id);
-                    setValue('title', book.title);
-                    setValue('publicationYear', book.publicationYear);
-                    setValue('categoryId', book.categoryId);
-                    setValue('authorIds', book.authors.map(a => a.id));
+                    setValue('title', bookData.title);
+                    setValue('publicationYear', bookData.publicationYear);
+                    setValue('categoryId', bookData.categoryId);
+                    setValue('authorIds', bookData.authors?.map((a: any) => a.id) || []);
+                } catch (err: unknown) {
+                    setError('Erro ao carregar dados do livro.');
+                } finally {
+                    setLoading(false);
                 }
-            } catch (err: any) {
-                setError('Erro ao carregar dados complementares (autores/categorias).');
-            }
+            };
+            loadData();
+        } else {
+            const loadOptions = async () => {
+                try {
+                    const [authorsData, categoriesData] = await Promise.all([
+                        authorRepo.list(),
+                        categoryRepo.list()
+                    ]);
+                    setAuthors(authorsData);
+                    setCategories(categoriesData);
+                } catch (err: unknown) {
+                    setError('Erro ao carregar opções.');
+                }
+            };
+            loadOptions();
         }
-        loadData();
-    }, [id]);
+    }, [id, bookRepo, authorRepo, categoryRepo, setValue]);
 
     const onSubmit = async (data: BookFormValues) => {
         try {
@@ -71,8 +89,8 @@ export function CadastroLivroPage() {
                 await bookRepo.create(data);
             }
             navigate('/livros');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao salvar livro.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao salvar livro.'));
         } finally {
             setLoading(false);
         }
@@ -179,8 +197,8 @@ export function CadastroLivroPage() {
                                                 key={author.id}
                                                 onClick={() => toggleAuthor(author.id)}
                                                 className={`p-2 rounded-sm cursor-pointer text-[12px] transition-all border ${selectedAuthorIds.includes(author.id)
-                                                        ? 'bg-accent/10 border-accent/20 text-accent'
-                                                        : 'border-transparent hover:bg-white/5'
+                                                    ? 'bg-accent/10 border-accent/20 text-accent'
+                                                    : 'border-transparent hover:bg-white/5'
                                                     }`}
                                             >
                                                 {selectedAuthorIds.includes(author.id) ? '✅' : '👤'} {author.name}
