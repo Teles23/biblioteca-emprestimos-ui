@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import type { Category } from '../../../../shared/types';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 
@@ -7,7 +8,7 @@ export function useCategories() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new CategoryRepositoryImpl();
+    const repository = useMemo(() => new CategoryRepositoryImpl(), []);
 
     const fetchCategories = useCallback(async () => {
         try {
@@ -15,23 +16,23 @@ export function useCategories() {
             setError(null);
             const data = await repository.list();
             setCategories(data);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao carregar categorias.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro.'));
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [repository]);
 
     const deleteCategory = useCallback(async (id: string) => {
         try {
             await repository.delete(id);
             setCategories((prev) => prev.filter((c) => c.id !== id));
             return true;
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao excluir categoria.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao excluir categoria.'));
             return false;
         }
-    }, []);
+    }, [repository]);
 
     useEffect(() => {
         fetchCategories();

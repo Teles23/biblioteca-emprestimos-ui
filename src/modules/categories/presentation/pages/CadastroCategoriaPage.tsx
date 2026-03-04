@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { categorySchema, type CategoryFormValues } from '../schemas/category.schema';
 
@@ -23,17 +24,17 @@ export function CadastroCategoriaPage() {
 
     useEffect(() => {
         if (id) {
-            async function loadCategory() {
+            const loadCategory = async () => {
                 try {
-                    const category = await repository.findById(id!);
-                    setValue('name', category.name || '');
-                } catch (err: any) {
+                    const data = await repository.findById(id);
+                    setValue('name', data.name);
+                } catch (err: unknown) {
                     setError('Erro ao carregar dados da categoria.');
                 }
-            }
+            };
             loadCategory();
         }
-    }, [id]);
+    }, [id, repository, setValue]);
 
     const onSubmit = async (data: CategoryFormValues) => {
         try {
@@ -45,8 +46,8 @@ export function CadastroCategoriaPage() {
                 await repository.create(data);
             }
             navigate('/categorias');
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao salvar categoria.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao salvar categoria.'));
         } finally {
             setLoading(false);
         }

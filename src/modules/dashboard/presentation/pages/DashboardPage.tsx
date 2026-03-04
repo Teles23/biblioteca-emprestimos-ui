@@ -1,4 +1,4 @@
-import { useAuth } from '../../../shared/contexts/AuthContext';
+import { useAuth } from '../../../../shared/contexts/useAuth';
 import { Link } from 'react-router-dom';
 
 export function DashboardPage() {
@@ -39,8 +39,8 @@ export function DashboardPage() {
                 {stats.map((stat, i) => (
                     <div key={i} className={`stat-card ${stat.type}`}>
                         <div className={`w-10 h-10 rounded-[6px] mb-3.5 flex items-center justify-center text-[18px] ${stat.type === 'accent' ? 'bg-accent/10' :
-                                stat.type === 'info' ? 'bg-info/10' :
-                                    stat.type === 'success' ? 'bg-success/10' : 'bg-danger/10'
+                            stat.type === 'info' ? 'bg-info/10' :
+                                stat.type === 'success' ? 'bg-success/10' : 'bg-danger/10'
                             }`}>
                             {stat.icon}
                         </div>
@@ -66,7 +66,7 @@ export function DashboardPage() {
                             {activities.map((act, i) => (
                                 <div key={i} className="flex gap-3 py-3 border-b border-surface-3 last:border-0">
                                     <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${act.dot === 'success' ? 'bg-success' :
-                                            act.dot === 'info' ? 'bg-info' : 'bg-warning'
+                                        act.dot === 'info' ? 'bg-info' : 'bg-warning'
                                         }`}></div>
                                     <div>
                                         <div className="text-[13px] text-text-primary" dangerouslySetInnerHTML={{ __html: act.text }}></div>

@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../shared/contexts/AuthContext';
+import { useAuth } from '../../../../shared/contexts/useAuth';
 import { useState } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { registerSchema, type RegisterFormValues } from '../schemas/auth.schema';
 
 export function RegisterPage() {
@@ -25,8 +26,8 @@ export function RegisterPage() {
             setError(null);
             await registerUser(data);
             navigate('/login');
-        } catch (err: any) {
-            setError(err.message || 'Erro ao realizar cadastro.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao realizar cadastro.'));
         } finally {
             setLoading(false);
         }

@@ -1,8 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../shared/contexts/AuthContext';
+import { useAuth } from '../../../../shared/contexts/useAuth';
 import { useState } from 'react';
+import { getErrorMessage } from '../../../../shared/utils/error';
 import { loginSchema, type LoginFormValues } from '../schemas/auth.schema';
 
 export function LoginPage() {
@@ -25,8 +26,8 @@ export function LoginPage() {
             setError(null);
             await login(data);
             navigate('/');
-        } catch (err: any) {
-            setError(err.message || 'Erro ao realizar login. Verifique suas credenciais.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao realizar login.'));
         } finally {
             setLoading(false);
         }
