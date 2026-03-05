@@ -10,16 +10,16 @@ export function Header({ title, breadcrumb }: HeaderProps) {
         <header className="header">
             <div className="header-breadcrumb">
                 <span>📚 LibraManager</span>
-                <span className="mx-2">/</span>
-                <strong className="text-text-primary font-bold">
+                <span className="mx-2 opacity-30">/</span>
+                <span className="text-text-primary font-bold">
                     {breadcrumb || title || 'Dashboard'}
-                </strong>
+                </span>
             </div>
 
             <div className="header-actions">
                 <div className="header-search">
-                    <span>🔍</span>
-                    <span>Buscar livros, autores...</span>
+                    <span className="opacity-60">🔍</span>
+                    <span className="text-text-secondary select-none">Buscar livros, autores...</span>
                 </div>
 
                 <Link to="/notificacoes" className="icon-btn notif-dot" title="Notificações">

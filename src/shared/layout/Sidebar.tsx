@@ -2,14 +2,20 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
 
 const menuItems = [
-    { path: '/', label: 'Dashboard', icon: '📊' },
-    { path: '/livros', label: 'Livros', icon: '📚' },
-    { path: '/autores', label: 'Autores', icon: '✍️' },
-    { path: '/categorias', label: 'Categorias', icon: '🏷️' },
-    { path: '/usuarios', label: 'Usuários', icon: '👥', adminOnly: true },
-    { path: '/meus-emprestimos', label: 'Meus Empréstimos', icon: '📖' },
-    { path: '/emprestimos', label: 'Empréstimos', icon: '🤝', adminOnly: true },
-    { path: '/historico', label: 'Histórico', icon: '📜', adminOnly: true },
+    { section: 'Principal', items: [
+        { path: '/', label: 'Dashboard', icon: '📊' },
+    ]},
+    { section: 'Catálogo', items: [
+        { path: '/livros', label: 'Livros', icon: '📚' },
+        { path: '/autores', label: 'Autores', icon: '✍️' },
+        { path: '/categorias', label: 'Categorias', icon: '🏷️' },
+    ]},
+    { section: 'Gestão', items: [
+        { path: '/usuarios', label: 'Usuários', icon: '👥', adminOnly: true },
+        { path: '/meus-emprestimos', label: 'Meus Empréstimos', icon: '📖' },
+        { path: '/emprestimos', label: 'Empréstimos', icon: '🤝', adminOnly: true },
+        { path: '/historico', label: 'Histórico', icon: '📜', adminOnly: true },
+    ]}
 ];
 
 export function Sidebar() {
@@ -32,30 +38,34 @@ export function Sidebar() {
             </div>
 
             <nav className="sidebar-nav">
-                <div className="nav-section-label">Principal</div>
-                {menuItems.map((item) => {
-                    if (item.adminOnly && !user?.roles.includes('ROLE_ADMIN')) {
-                        return null;
-                    }
-
-                    return (
-                        <NavLink
-                            key={item.path}
-                            to={item.path}
-                            className={({ isActive }) =>
-                                `nav-item ${isActive ? 'active' : ''}`
+                {menuItems.map((section, idx) => (
+                    <div key={idx} className="mb-4 last:mb-0">
+                        <div className="nav-section-label">{section.section}</div>
+                        {section.items.map((item) => {
+                            if (item.adminOnly && !user?.roles.includes('ROLE_ADMIN')) {
+                                return null;
                             }
-                        >
-                            <span className="icon">{item.icon}</span>
-                            {item.label}
-                        </NavLink>
-                    );
-                })}
+
+                            return (
+                                <NavLink
+                                    key={item.path}
+                                    to={item.path}
+                                    className={({ isActive }) =>
+                                        `nav-item ${isActive ? 'active' : ''}`
+                                    }
+                                >
+                                    <span className="icon">{item.icon}</span>
+                                    {item.label}
+                                </NavLink>
+                            );
+                        })}
+                    </div>
+                ))}
             </nav>
 
             <div className="sidebar-footer">
-                <div className="user-card">
-                    <div className="user-avatar">
+                <div className="user-card" onClick={() => navigate('/perfil')}>
+                    <div className="user-avatar" title={user?.name}>
                         {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
                     </div>
                     <div className="user-info">
@@ -68,8 +78,8 @@ export function Sidebar() {
 
                 <button
                     onClick={handleLogout}
-                    className="btn btn-ghost btn-sm w-full mt-2"
-                    style={{ color: 'var(--danger)', justifyContent: 'flex-start' }}
+                    className="btn btn-ghost btn-sm w-full mt-2 justify-start px-2.5"
+                    style={{ color: 'var(--danger)' }}
                 >
                     <span className="mr-2">🚪</span>
                     Sair do sistema
