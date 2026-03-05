@@ -1,102 +1,126 @@
+﻿import { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { useEffect, useState, useMemo } from 'react';
+
 import { getErrorMessage } from '../../../../shared/utils/error';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { categorySchema, type CategoryFormValues } from '../schemas/category.schema';
 
 export function CadastroCategoriaPage() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const repository = useMemo(() => new CategoryRepositoryImpl(), []);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const repository = useMemo(() => new CategoryRepositoryImpl(), []);
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm<CategoryFormValues>({
-        resolver: zodResolver(categorySchema),
-    });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (id) {
-            const loadCategory = async () => {
-                try {
-                    const data = await repository.findById(id);
-                    setValue('name', data.name);
-                } catch (err: unknown) {
-                    setError('Erro ao carregar dados da categoria.');
-                }
-            };
-            loadCategory();
-        }
-    }, [id, repository, setValue]);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: '',
+      description: '',
+    },
+  });
 
-    const onSubmit = async (data: CategoryFormValues) => {
-        try {
-            setLoading(true);
-            setError(null);
-            if (id) {
-                await repository.update(id, data);
-            } else {
-                await repository.create(data);
-            }
-            navigate('/categorias');
-        } catch (err: unknown) {
-            setError(getErrorMessage(err, 'Erro ao salvar categoria.'));
-        } finally {
-            setLoading(false);
-        }
+  useEffect(() => {
+    if (!id) return;
+
+    const loadCategory = async () => {
+      try {
+        const data = await repository.findById(id);
+        setValue('name', data.name);
+      } catch {
+        setError('Erro ao carregar dados da categoria.');
+      }
     };
 
-    return (
-        <div className="animate-in fade-in duration-500">
-            <div className="page-header">
-                <div className="page-header-left">
-                    <h1>{id ? 'Editar Categoria' : 'Nova Categoria'} 📁</h1>
-                    <p>{id ? 'Atualize o nome da categoria selecionada' : 'Crie uma nova categoria para organizar seus livros'}</p>
-                </div>
-                <Link to="/categorias" className="btn btn-secondary">
-                    ← Voltar
-                </Link>
-            </div>
+    loadCategory();
+  }, [id, repository, setValue]);
 
-            <div className="card max-w-[600px]">
-                <div className="card-header">
-                    <div className="card-title">Informações da Categoria</div>
-                </div>
-                <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-group">
-                            <label>Nome da Categoria <span className="req">*</span></label>
-                            <input
-                                {...register('name')}
-                                type="text"
-                                placeholder="Ex: Ficção Científica, Romance, Biografia..."
-                                className={errors.name ? 'border-danger' : ''}
-                            />
-                            {errors.name && <span className="text-[11px] text-danger mt-1">{errors.name.message}</span>}
-                        </div>
+  const onSubmit = async (values: CategoryFormValues) => {
+    try {
+      setLoading(true);
+      setError(null);
 
-                        {error && (
-                            <div className="alert alert-info mt-6">
-                                ⚠️ {error}
-                            </div>
-                        )}
+      const payload = { name: values.name };
 
-                        <div className="form-actions mt-8">
-                            <button type="submit" disabled={loading} className="btn btn-primary">
-                                {loading ? 'Salvando...' : '💾 Salvar Categoria'}
-                            </button>
-                            <Link to="/categorias" className="btn btn-secondary">Cancelar</Link>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      if (id) {
+        await repository.update(id, payload);
+      } else {
+        await repository.create(payload);
+      }
+
+      navigate('/categorias');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Erro ao salvar categoria.'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="animate-in fade-in duration-500">
+      <div className="page-header">
+        <div className="page-header-left">
+          <h1>{id ? 'Editar Categoria' : 'Cadastrar Categoria'}</h1>
+          <p>{id ? 'Atualize os dados da categoria' : 'Adicione uma nova categoria ao sistema'}</p>
         </div>
-    );
+        <Link to="/categorias" className="btn btn-secondary">← Voltar</Link>
+      </div>
+
+      <div style={{ maxWidth: 520 }}>
+        <div className="card">
+          <div className="card-header">
+            <div className="card-title">Dados da Categoria</div>
+          </div>
+          <div className="card-body">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-grid" style={{ gap: 18 }}>
+                <div className="form-group">
+                  <label>Nome da Categoria <span className="req">*</span></label>
+                  <input
+                    {...register('name')}
+                    type="text"
+                    placeholder="Ex: Biografia"
+                    className={errors.name ? 'border-danger' : ''}
+                  />
+                  {errors.name && <span className="text-[11px] text-danger mt-1">{errors.name.message}</span>}
+                  <div className="form-hint">Deve ser único no sistema</div>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    Descrição <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(opcional)</span>
+                  </label>
+                  <textarea
+                    {...register('description')}
+                    placeholder="Descreva o tipo de livros nesta categoria..."
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="alert alert-warning" style={{ marginTop: 16 }}>
+                  ⚠️ {error}
+                </div>
+              )}
+
+              <div className="form-actions" style={{ marginTop: 24 }}>
+                <button type="submit" disabled={loading} className="btn btn-primary">
+                  {loading ? 'Salvando...' : '💾 Salvar Categoria'}
+                </button>
+                <Link to="/categorias" className="btn btn-secondary">Cancelar</Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
