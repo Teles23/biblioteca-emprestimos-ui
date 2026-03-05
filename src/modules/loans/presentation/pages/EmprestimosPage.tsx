@@ -1,4 +1,4 @@
-import { useLoans } from '../hooks/useLoans';
+﻿import { useLoans } from '../hooks/useLoans';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error'; // Added import for getErrorMessage
@@ -166,3 +166,5 @@ export function EmprestimosPage() {
         </div>
     );
 }
+
+

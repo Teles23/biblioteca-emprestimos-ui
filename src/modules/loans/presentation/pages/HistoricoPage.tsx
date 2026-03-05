@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+﻿import { useEffect, useState, useCallback, useMemo } from 'react';
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import type { Loan } from '../../../../shared/types';
 
@@ -111,3 +111,5 @@ export function HistoricoPage() {
         </div>
     );
 }
+
+
