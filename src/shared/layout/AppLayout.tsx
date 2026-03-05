@@ -6,7 +6,7 @@ export function AppLayout() {
     return (
         <div className="app-layout">
             <Sidebar />
-            <div className="flex-1 flex flex-col min-h-screen">
+            <div className="flex-1 flex flex-col">
                 <Header />
                 <main className="main-content">
                     <Outlet />

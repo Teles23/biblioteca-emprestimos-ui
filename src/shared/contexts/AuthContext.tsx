@@ -42,18 +42,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('@LibraManager:user');
     }, []);
 
+    const contextValue = useMemo(() => ({
+        user,
+        token,
+        isAuthenticated: !!token,
+        isAdmin: user?.roles.includes('ROLE_ADMIN') || false,
+        login,
+        register,
+        logout
+    }), [user, token, login, register, logout]);
+
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                token,
-                isAuthenticated: !!token,
-                isAdmin: user?.roles.includes('ROLE_ADMIN') || false,
-                login,
-                register,
-                logout
-            }}
-        >
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );
