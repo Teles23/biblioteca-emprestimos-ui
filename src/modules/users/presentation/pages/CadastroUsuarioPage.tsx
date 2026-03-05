@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getErrorMessage } from '../../../../shared/utils/error';
@@ -12,7 +12,7 @@ export function CadastroUsuarioPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const repository = new UserRepositoryImpl();
+    const repository = useMemo(() => new UserRepositoryImpl(), []);
 
     const {
         register,
