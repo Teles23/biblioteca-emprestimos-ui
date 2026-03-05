@@ -81,7 +81,7 @@ export function LoginPage() {
                                 placeholder="exemplo@email.com"
                                 className={errors.email ? 'border-danger' : ''}
                             />
-                            {errors.email && <span className="text-[11px] text-danger">{errors.email.message}</span>}
+                            {errors.email && <span className="text-[11px] text-danger mt-1">{errors.email.message}</span>}
                         </div>
 
                         <div className="form-group">
@@ -92,11 +92,11 @@ export function LoginPage() {
                                 placeholder="••••••••"
                                 className={errors.password ? 'border-danger' : ''}
                             />
-                            {errors.password && <span className="text-[11px] text-danger">{errors.password.message}</span>}
+                            {errors.password && <span className="text-[11px] text-danger mt-1">{errors.password.message}</span>}
                         </div>
 
                         {error && (
-                            <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[12px] font-medium">
+                            <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[12px] font-medium animate-in slide-in-from-top-1 duration-200">
                                 ⚠️ {error}
                             </div>
                         )}
@@ -104,7 +104,7 @@ export function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn btn-primary w-full py-3 justify-center text-[14px]"
+                            className="btn btn-primary w-full py-3.5 justify-center text-[14px] mt-2"
                         >
                             {loading ? 'Entrando...' : 'Entrar no Sistema'}
                         </button>

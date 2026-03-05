@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error';
 import { BookRepositoryImpl } from '../../infrastructure/BookRepositoryImpl';
 import { AuthorRepositoryImpl } from '../../../authors/infrastructure/AuthorRepositoryImpl';
@@ -19,9 +19,9 @@ export function CadastroLivroPage() {
     const [authors, setAuthors] = useState<Author[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
-    const bookRepo = new BookRepositoryImpl();
-    const authorRepo = new AuthorRepositoryImpl();
-    const categoryRepo = new CategoryRepositoryImpl();
+    const bookRepo = useMemo(() => new BookRepositoryImpl(), []);
+    const authorRepo = useMemo(() => new AuthorRepositoryImpl(), []);
+    const categoryRepo = useMemo(() => new CategoryRepositoryImpl(), []);
 
     const {
         register,
@@ -36,7 +36,7 @@ export function CadastroLivroPage() {
         }
     });
 
-    const selectedAuthorIds = watch('authorIds');
+    const selectedAuthorIds = watch('authorIds') || [];
 
     useEffect(() => {
         if (id) {
@@ -48,8 +48,8 @@ export function CadastroLivroPage() {
                         authorRepo.list(),
                         categoryRepo.list()
                     ]);
-                    setAuthors(authorsData);
-                    setCategories(categoriesData);
+                    setAuthors(authorsData || []);
+                    setCategories(categoriesData || []);
 
                     setValue('title', bookData.title);
                     setValue('publicationYear', bookData.publicationYear);
@@ -69,8 +69,8 @@ export function CadastroLivroPage() {
                         authorRepo.list(),
                         categoryRepo.list()
                     ]);
-                    setAuthors(authorsData);
-                    setCategories(categoriesData);
+                    setAuthors(authorsData || []);
+                    setCategories(categoriesData || []);
                 } catch (err: unknown) {
                     setError('Erro ao carregar opções.');
                 }
@@ -97,14 +97,14 @@ export function CadastroLivroPage() {
     };
 
     const toggleAuthor = (authorId: string) => {
-        const current = [...selectedAuthorIds];
+        const current = [...(selectedAuthorIds || [])];
         const index = current.indexOf(authorId);
         if (index > -1) {
             current.splice(index, 1);
         } else {
             current.push(authorId);
         }
-        setValue('authorIds', current);
+        setValue('authorIds', current, { shouldValidate: true, shouldDirty: true });
     };
 
     return (
