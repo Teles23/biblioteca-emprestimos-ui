@@ -10,6 +10,7 @@ import { CategoriasPage } from '../modules/categories/presentation/pages/Categor
 import { CadastroCategoriaPage } from '../modules/categories/presentation/pages/CadastroCategoriaPage';
 import { UsuariosPage } from '../modules/users/presentation/pages/UsuariosPage';
 import { CadastroUsuarioPage } from '../modules/users/presentation/pages/CadastroUsuarioPage';
+import { CadastroLeitorPage } from '../modules/users/presentation/pages/CadastroLeitorPage';
 import { DashboardPage } from '../modules/dashboard/presentation/pages/DashboardPage';
 import { EmprestimosPage } from '../modules/loans/presentation/pages/EmprestimosPage';
 import { HistoricoPage } from '../modules/loans/presentation/pages/HistoricoPage';
@@ -132,6 +133,10 @@ export const router = createBrowserRouter([
                             {
                                 path: 'novo',
                                 element: <CadastroUsuarioPage />,
+                            },
+                            {
+                                path: 'leitores/novo',
+                                element: <CadastroLeitorPage />,
                             },
                         ],
                     },
