@@ -1,15 +1,40 @@
 import { useBooks } from '../hooks/useBooks';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { CategoryRepositoryImpl } from '../../../categories/infrastructure/CategoryRepositoryImpl';
+import type { Category } from '../../../../shared/types';
 
 export function LivrosPage() {
     const { books, loading, error, deleteBook, refresh } = useBooks();
     const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('ALL');
+    const [categoryFilter, setCategoryFilter] = useState('ALL');
+    const [categories, setCategories] = useState<Category[]>([]);
 
-    const filteredBooks = books.filter((book) =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.authors.some(author => author.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const categoryRepo = useMemo(() => new CategoryRepositoryImpl(), []);
+
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const data = await categoryRepo.list();
+                setCategories(data);
+            } catch (err) {
+                console.error("Erro ao carregar categorias para filtro", err);
+            }
+        };
+        loadCategories();
+    }, [categoryRepo]);
+
+    const filteredBooks = books.filter((book) => {
+        const matchesSearch = 
+            book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.authors.some(author => author.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        
+        const matchesStatus = statusFilter === 'ALL' || book.status === statusFilter;
+        const matchesCategory = categoryFilter === 'ALL' || book.categoryId === categoryFilter;
+
+        return matchesSearch && matchesStatus && matchesCategory;
+    });
 
     const handleDelete = async (id: string) => {
         if (window.confirm('Tem certeza que deseja excluir este livro?')) {
@@ -21,12 +46,12 @@ export function LivrosPage() {
         <div className="animate-in fade-in duration-500">
             <div className="page-header">
                 <div className="page-header-left">
-                    <h1>Gestão de Acervo 📚</h1>
-                    <p>Visualize, adicione e gerencie os livros disponíveis na biblioteca.</p>
+                    <h1>Livros</h1>
+                    <p>Gerencie o acervo completo da biblioteca</p>
                 </div>
 
                 <Link to="/livros/novo" className="btn btn-primary">
-                    <span>➕</span> Adicionar Livro
+                    + Adicionar Livro
                 </Link>
             </div>
 
@@ -35,16 +60,39 @@ export function LivrosPage() {
                     <span>🔍</span>
                     <input
                         type="text"
-                        placeholder="Buscar por título ou autor..."
+                        placeholder="Buscar por título, autor ou ISBN..."
                         className="w-full bg-transparent border-none outline-none text-[13px]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
+                <div className="toolbar-filters">
+                    <select 
+                        className="filter-select"
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                    >
+                        <option value="ALL">Todas as categorias</option>
+                        {categories.map(cat => (
+                            <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                    </select>
+
+                    <select 
+                        className="filter-select"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option value="ALL">Todos os status</option>
+                        <option value="AVAILABLE">Disponível</option>
+                        <option value="BORROWED">Emprestado</option>
+                    </select>
+                </div>
+
                 <div className="toolbar-right">
                     <button onClick={refresh} className="btn btn-secondary btn-sm">
-                        🔄 Atualizar
+                        ⬇ Exportar
                     </button>
                 </div>
             </div>
@@ -55,22 +103,23 @@ export function LivrosPage() {
                 </div>
             )}
 
-            <div className="table-container">
+            <div className="table-wrapper">
                 <table className="data-table">
                     <thead>
                         <tr>
-                            <th>Título</th>
+                            <th>Livro</th>
                             <th>Autores</th>
                             <th>Categoria</th>
+                            <th>Ano</th>
                             <th>Status</th>
-                            <th className="text-right">Ações</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             Array.from({ length: 5 }).map((_, i) => (
                                 <tr key={i} className="animate-pulse">
-                                    <td colSpan={5} className="py-8 text-center">
+                                    <td colSpan={6} className="py-8 text-center">
                                         <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
                                     </td>
                                 </tr>
@@ -79,41 +128,52 @@ export function LivrosPage() {
                             filteredBooks.map((book) => (
                                 <tr key={book.id}>
                                     <td>
-                                        <div className="font-bold text-text-primary">{book.title}</div>
-                                        <div className="text-[11px] text-text-muted mt-0.5">Ano: {book.publicationYear}</div>
-                                    </td>
-                                    <td>
-                                        <div className="text-text-secondary">
-                                            {book.authors.map(a => a.name).join(', ')}
+                                        <div className="book-cell">
+                                            <div className="book-thumb" style={{ background: 'linear-gradient(135deg, var(--accent), #f3c26a)' }}>📖</div>
+                                            <div className="book-cell-info">
+                                                <div className="book-cell-title">{book.title}</div>
+                                                <div className="book-cell-meta">ISBN: {book.id.substring(0, 8).toUpperCase()}</div>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <span className="tag">
-                                            {book.category?.name || 'Geral'}
+                                        <div className="tag-list">
+                                            {book.authors.map(a => (
+                                                <span key={a.id} className="tag">{a.name}</span>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td>{book.category?.name || 'Geral'}</td>
+                                    <td>{book.publicationYear}</td>
+                                    <td>
+                                        <span className={`badge ${book.status === 'AVAILABLE' ? 'badge-success' : 'badge-warning'}`}>
+                                            ● {book.status === 'AVAILABLE' ? 'Disponível' : 'Emprestado'}
                                         </span>
                                     </td>
                                     <td>
-                                        <span className={`badge ${book.status === 'AVAILABLE' ? 'badge-success' : 'badge-warning'}`}>
-                                            {book.status === 'AVAILABLE' ? 'Disponível' : 'Emprestado'}
-                                        </span>
-                                    </td>
-                                    <td className="text-right">
-                                        <div className="actions-cell justify-end">
-                                            <Link to={`/livros/${book.id}/editar`} className="icon-btn" title="Editar">✏️</Link>
-                                            <button onClick={() => handleDelete(book.id)} className="icon-btn text-danger" title="Excluir">🗑️</button>
+                                        <div className="actions-cell">
+                                            <Link to={`/livros/${book.id}/editar`} className="btn btn-secondary btn-sm btn-icon" title="Editar">✏️</Link>
+                                            <button onClick={() => handleDelete(book.id)} className="btn btn-danger btn-sm btn-icon" title="Excluir">🗑️</button>
                                         </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5} className="py-12 text-center text-text-muted">
+                                <td colSpan={6} className="py-12 text-center text-text-muted">
                                     Nenhum livro encontrado.
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
+                
+                <div className="pagination">
+                    <div className="pagination-info">Mostrando {filteredBooks.length} de {books.length} livros</div>
+                    <div className="pagination-pages">
+                        <button className="page-btn active">1</button>
+                    </div>
+                </div>
             </div>
         </div>
     );

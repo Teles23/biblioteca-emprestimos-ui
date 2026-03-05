@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { categorySchema, type CategoryFormValues } from '../schemas/category.schema';
@@ -11,7 +11,7 @@ export function CadastroCategoriaPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const repository = new CategoryRepositoryImpl();
+    const repository = useMemo(() => new CategoryRepositoryImpl(), []);
 
     const {
         register,
