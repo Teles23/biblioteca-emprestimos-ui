@@ -74,10 +74,20 @@ npm run build
 ## Funcionalidades
 
 ### Implementadas
-> _(em desenvolvimento)_
+- [x] **Autenticação**: Login, Registro e logout com persistência via JWT.
+- [x] **Dashboard**: Indicadores em tempo real (Livros, Usuários, Empréstimos Ativos/Atrasados) e lista de atividades recentes.
+- [x] **Livros**: CRUD completo com listagem refinada, busca e filtros por categoria/status.
+- [x] **Autores**: CRUD completo integrado com livros.
+- [x] **Categorias**: CRUD completo com integração na listagem de livros.
+- [x] **Empréstimos**: Fluxo de empréstimo com cálculo automático de data de devolução.
+- [x] **Devoluções**: Registro de devolução com cálculo de dias de atraso.
+- [x] **Histórico**: Visualização completa de transações passadas.
+- [x] **Layout**: Interface moderna e responsiva baseada em Clean Architecture e TailwindCSS.
 
-### Não Implementadas
-> _(em desenvolvimento)_
+### Não Implementadas / Próximos Passos
+- [ ] **Testes de Integração**: Expandir cobertura de testes para fluxos de ponta a ponta no frontend.
+- [ ] **Notificações**: Alertas em tempo real para devoluções próximas ou atrasadas.
+- [ ] **Relatórios Avançados**: Exportação de dados em PDF/Excel.
 
 ## Conexão com o Backend
 
