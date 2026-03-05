@@ -21,7 +21,7 @@ export function useLoans() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [repository]);
 
     const fetchOverdueLoans = useCallback(async () => {
         try {
