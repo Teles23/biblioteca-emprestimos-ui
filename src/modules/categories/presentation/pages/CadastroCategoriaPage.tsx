@@ -6,10 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getErrorMessage } from '../../../../shared/utils/error';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { categorySchema, type CategoryFormValues } from '../schemas/category.schema';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function CadastroCategoriaPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
   const repository = useMemo(() => new CategoryRepositoryImpl(), []);
 
   const [loading, setLoading] = useState(false);
@@ -56,9 +58,12 @@ export function CadastroCategoriaPage() {
         await repository.create(payload);
       }
 
+      toast.success(id ? 'Categoria atualizada com sucesso.' : 'Categoria cadastrada com sucesso.');
       navigate('/categorias');
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Erro ao salvar categoria.'));
+      const message = getErrorMessage(err, 'Erro ao salvar categoria.');
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -105,11 +110,7 @@ export function CadastroCategoriaPage() {
                 </div>
               </div>
 
-              {error && (
-                <div className="alert alert-warning" style={{ marginTop: 16 }}>
-                  ⚠️ {error}
-                </div>
-              )}
+              {error && <p className="mt-4 text-[12px] text-danger font-medium">⚠️ {error}</p>}
 
               <div className="form-actions" style={{ marginTop: 24 }}>
                 <button type="submit" disabled={loading} className="btn btn-primary">

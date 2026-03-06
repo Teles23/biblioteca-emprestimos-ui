@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { getErrorMessage } from '../../../../shared/utils/error';
 import { UserRepositoryImpl } from '../../infrastructure/UserRepositoryImpl';
+import { useToast } from '../../../../shared/ui/useToast';
 
 type ReaderFormValues = {
   name: string;
@@ -13,6 +14,7 @@ type ReaderFormValues = {
 
 export function CadastroLeitorPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const repository = useMemo(() => new UserRepositoryImpl(), []);
 
   const [loading, setLoading] = useState(false);
@@ -35,8 +37,11 @@ export function CadastroLeitorPage() {
         phone: values.phone,
       });
       setGeneratedPassword(created.generatedPassword || null);
+      toast.success('Leitor cadastrado com sucesso.');
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Erro ao cadastrar leitor.'));
+      const message = getErrorMessage(err, 'Erro ao cadastrar leitor.');
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -95,7 +100,7 @@ export function CadastroLeitorPage() {
                 </div>
               </div>
 
-              <div className="alert alert-info" style={{ marginTop: 18 }}>
+              <div className="note note-info" style={{ marginTop: 18 }}>
                 A senha será <strong>gerada automaticamente</strong> e retornada após o cadastro.
               </div>
 
@@ -109,7 +114,7 @@ export function CadastroLeitorPage() {
                 </div>
               </div>
 
-              {error && <div className="alert alert-warning" style={{ marginTop: 16 }}>{error}</div>}
+              {error && <p className="mt-4 text-[12px] text-danger font-medium">⚠️ {error}</p>}
 
               <div className="form-actions" style={{ marginTop: 24 }}>
                 <button type="submit" className="btn btn-primary" disabled={loading}>

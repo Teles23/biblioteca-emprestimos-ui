@@ -7,11 +7,13 @@ import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import { BookRepositoryImpl } from '../../../books/infrastructure/BookRepositoryImpl';
 import { UserRepositoryImpl } from '../../../users/infrastructure/UserRepositoryImpl';
 import type { Book, User } from '../../../../shared/types';
+import { useToast } from '../../../../shared/ui/useToast';
 
 import { loanSchema, type LoanFormValues } from '../schemas/loan.schema';
 
 export function RegistrarEmprestimoPage() {
     const navigate = useNavigate();
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
     const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -55,9 +57,12 @@ export function RegistrarEmprestimoPage() {
             setLoading(true);
             setError(null);
             await loanRepo.create(data);
+            toast.success('Empréstimo registrado com sucesso.');
             navigate('/emprestimos');
         } catch (err: unknown) {
-            setError(getErrorMessage(err, 'Erro ao processar.'));
+            const message = getErrorMessage(err, 'Erro ao processar.');
+            setError(message);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -111,15 +116,11 @@ export function RegistrarEmprestimoPage() {
                             </div>
                         </div>
 
-                        <div className="alert alert-info mt-6">
+                        <div className="note note-info mt-6">
                             ℹ️ O prazo de devolução é calculado automaticamente para <strong>14 dias</strong> a partir de hoje.
                         </div>
 
-                        {error && (
-                            <div className="alert alert-info mt-4 bg-danger/10 text-danger border-danger/20">
-                                ⚠️ {error}
-                            </div>
-                        )}
+                        {error && <p className="mt-4 text-[12px] text-danger font-medium">⚠️ {error}</p>}
 
                         <div className="form-actions mt-8">
                             <button type="submit" disabled={loading || dataLoading} className="btn btn-primary">

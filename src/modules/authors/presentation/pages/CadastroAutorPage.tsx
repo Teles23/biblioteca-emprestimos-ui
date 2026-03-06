@@ -4,12 +4,14 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import { AuthorRepositoryImpl } from '../../infrastructure/AuthorRepositoryImpl';
 import { getErrorMessage } from '../../../../shared/utils/error';
+import { useToast } from '../../../../shared/ui/useToast';
 
 import { authorSchema, type AuthorFormValues } from '../schemas/author.schema';
 
 export function CadastroAutorPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -48,9 +50,12 @@ export function CadastroAutorPage() {
             } else {
                 await repository.create(data);
             }
+            toast.success(id ? 'Autor atualizado com sucesso.' : 'Autor cadastrado com sucesso.');
             navigate('/autores');
         } catch (err: unknown) {
-            setError(getErrorMessage(err, 'Erro ao salvar.'));
+            const message = getErrorMessage(err, 'Erro ao salvar.');
+            setError(message);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -97,11 +102,7 @@ export function CadastroAutorPage() {
                             </div>
                         </div>
 
-                        {error && (
-                            <div className="alert alert-info mt-6">
-                                ⚠️ {error}
-                            </div>
-                        )}
+                        {error && <p className="mt-4 text-[12px] text-danger font-medium">⚠️ {error}</p>}
 
                         <div className="form-actions mt-8">
                             <button type="submit" disabled={loading} className="btn btn-primary">

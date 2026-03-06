@@ -7,12 +7,14 @@ import { BookRepositoryImpl } from '../../infrastructure/BookRepositoryImpl';
 import { AuthorRepositoryImpl } from '../../../authors/infrastructure/AuthorRepositoryImpl';
 import { CategoryRepositoryImpl } from '../../../categories/infrastructure/CategoryRepositoryImpl';
 import type { Author, Category } from '../../../../shared/types';
+import { useToast } from '../../../../shared/ui/useToast';
 
 import { bookSchema, type BookFormValues } from '../schemas/book.schema';
 
 export function CadastroLivroPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -54,8 +56,8 @@ export function CadastroLivroPage() {
                     setValue('title', bookData.title);
                     setValue('publicationYear', bookData.publicationYear);
                     setValue('categoryId', bookData.categoryId);
-                    setValue('authorIds', bookData.authors?.map((a: any) => a.id) || []);
-                } catch (err: unknown) {
+                    setValue('authorIds', bookData.authors?.map((a: Author) => a.id) || []);
+                } catch {
                     setError('Erro ao carregar dados do livro.');
                 } finally {
                     setLoading(false);
@@ -71,7 +73,7 @@ export function CadastroLivroPage() {
                     ]);
                     setAuthors(authorsData || []);
                     setCategories(categoriesData || []);
-                } catch (err: unknown) {
+                } catch {
                     setError('Erro ao carregar opções.');
                 }
             };
@@ -88,9 +90,12 @@ export function CadastroLivroPage() {
             } else {
                 await bookRepo.create(data);
             }
+            toast.success(id ? 'Livro atualizado com sucesso.' : 'Livro cadastrado com sucesso.');
             navigate('/livros');
         } catch (err: unknown) {
-            setError(getErrorMessage(err, 'Erro ao salvar livro.'));
+            const message = getErrorMessage(err, 'Erro ao salvar livro.');
+            setError(message);
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -209,11 +214,7 @@ export function CadastroLivroPage() {
                                 </div>
                             </div>
 
-                            {error && (
-                                <div className="alert alert-info mt-6">
-                                    ⚠️ {error}
-                                </div>
-                            )}
+                            {error && <p className="mt-4 text-[12px] text-danger font-medium">⚠️ {error}</p>}
 
                             <div className="form-actions mt-8">
                                 <button type="submit" disabled={loading} className="btn btn-primary">
@@ -251,7 +252,7 @@ export function CadastroLivroPage() {
                             </div>
                         </div>
 
-                        <div className="alert alert-info">
+                        <div className="note note-info">
                             ℹ️ O livro ficará visível para todos após o salvamento.
                         </div>
                     </div>

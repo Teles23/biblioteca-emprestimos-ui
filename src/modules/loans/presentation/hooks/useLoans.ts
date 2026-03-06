@@ -16,8 +16,8 @@ export function useLoans() {
             setError(null);
             const data = await repository.listActive(userId);
             setLoans(data);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Erro ao carregar empréstimos ativos.');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Erro ao carregar empréstimos ativos.'));
         } finally {
             setLoading(false);
         }
