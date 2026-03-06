@@ -2,25 +2,44 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error'; // Added import for getErrorMessage
+import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function EmprestimosPage() {
     const { loans, loading, error, fetchActiveLoans, returnBook } = useLoans();
+    const toast = useToast();
     const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'OVERDUE'>('ALL');
+    const [loanToReturn, setLoanToReturn] = useState<string | null>(null);
+    const [isReturning, setIsReturning] = useState(false);
 
     useEffect(() => {
         fetchActiveLoans();
     }, [fetchActiveLoans]);
 
-    const handleReturn = async (id: string) => {
-        if (window.confirm('Confirmar devolução do livro?')) {
-            try { // Added try-catch block for returnBook
-                await returnBook(id);
-            } catch (err: unknown) {
-                // Assuming a mechanism to display errors in the UI,
-                // or that returnBook itself handles setting the error state in useLoans.
-                // For now, we'll just log it, as setError is not defined in this component.
-                console.error("Error returning book:", getErrorMessage(err, 'Erro ao devolver livro.'));
+    const handleReturn = (id: string) => {
+        setLoanToReturn(id);
+    };
+
+    const handleConfirmReturn = async () => {
+        if (!loanToReturn) {
+            return;
+        }
+
+        try {
+            setIsReturning(true);
+            const returned = await returnBook(loanToReturn);
+
+            if (returned) {
+                toast.success('Devolução registrada com sucesso.');
+                setLoanToReturn(null);
+            } else {
+                toast.error('Não foi possível registrar a devolução.');
             }
+        } catch (err: unknown) {
+            console.error("Error returning book:", getErrorMessage(err, 'Erro ao devolver livro.'));
+            toast.error(getErrorMessage(err, 'Erro ao devolver livro.'));
+        } finally {
+            setIsReturning(false);
         }
     };
 
@@ -163,6 +182,17 @@ export function EmprestimosPage() {
                     </tbody>
                 </table>
             </div>
+
+            <ConfirmDialog
+                isOpen={Boolean(loanToReturn)}
+                title="Confirmar devolução"
+                description="Ao confirmar, o livro será marcado como devolvido e ficará disponível novamente."
+                confirmLabel="Confirmar devolução"
+                cancelLabel="Cancelar"
+                isLoading={isReturning}
+                onCancel={() => setLoanToReturn(null)}
+                onConfirm={handleConfirmReturn}
+            />
         </div>
     );
 }

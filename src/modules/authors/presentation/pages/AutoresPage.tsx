@@ -1,18 +1,41 @@
-﻿import { useAuthors } from '../hooks/useAuthors';
+import { useAuthors } from '../hooks/useAuthors';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function AutoresPage() {
     const { authors, loading, error, deleteAuthor, refresh } = useAuthors();
+    const toast = useToast();
     const [searchTerm, setSearchTerm] = useState('');
+    const [authorToDelete, setAuthorToDelete] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const filteredAuthors = authors.filter((a) =>
         a.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleDelete = async (id: string) => {
-        if (window.confirm('Tem certeza que deseja excluir este autor?')) {
-            await deleteAuthor(id);
+    const handleDelete = (id: string) => {
+        setAuthorToDelete(id);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!authorToDelete) {
+            return;
+        }
+
+        try {
+            setIsDeleting(true);
+            const deleted = await deleteAuthor(authorToDelete);
+
+            if (deleted) {
+                toast.success('Autor excluído com sucesso.');
+                setAuthorToDelete(null);
+            } else {
+                toast.error('Não foi possível excluir o autor.');
+            }
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -112,8 +135,17 @@ export function AutoresPage() {
                     </tbody>
                 </table>
             </div>
+
+            <ConfirmDialog
+                isOpen={Boolean(authorToDelete)}
+                title="Excluir autor"
+                description="Essa ação remove o autor do cadastro e não poderá ser desfeita."
+                confirmLabel="Excluir autor"
+                cancelLabel="Voltar"
+                isLoading={isDeleting}
+                onCancel={() => setAuthorToDelete(null)}
+                onConfirm={handleConfirmDelete}
+            />
         </div>
     );
 }
-
-

@@ -1,12 +1,17 @@
-﻿import { useUsers } from '../hooks/useUsers';
+import { useUsers } from '../hooks/useUsers';
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function UsuariosPage() {
   const { users, loading, error, deleteUser, refresh } = useUsers();
+  const toast = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const filteredUsers = useMemo(() => users.filter((u) => {
     const matchesSearch = u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -15,9 +20,27 @@ export function UsuariosPage() {
     return matchesSearch && matchesRole && matchesStatus;
   }), [users, searchTerm, roleFilter, statusFilter]);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja remover este usuário?')) {
-      await deleteUser(id);
+  const handleDelete = (id: string) => {
+    setUserToDelete(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      const deleted = await deleteUser(userToDelete);
+
+      if (deleted) {
+        toast.success('Usuário removido com sucesso.');
+        setUserToDelete(null);
+      } else {
+        toast.error('Não foi possível remover o usuário.');
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -124,6 +147,17 @@ export function UsuariosPage() {
           <div className="pagination-pages"><span className="page-btn active">1</span></div>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={Boolean(userToDelete)}
+        title="Remover usuário"
+        description="Essa ação remove o usuário do sistema e não poderá ser desfeita."
+        confirmLabel="Remover usuário"
+        cancelLabel="Cancelar"
+        isLoading={isDeleting}
+        onCancel={() => setUserToDelete(null)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

@@ -3,13 +3,18 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { CategoryRepositoryImpl } from '../../../categories/infrastructure/CategoryRepositoryImpl';
 import type { Category } from '../../../../shared/types';
+import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function LivrosPage() {
     const { books, loading, error, deleteBook, refresh } = useBooks();
+    const toast = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
     const [categoryFilter, setCategoryFilter] = useState('ALL');
     const [categories, setCategories] = useState<Category[]>([]);
+    const [bookToDelete, setBookToDelete] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const categoryRepo = useMemo(() => new CategoryRepositoryImpl(), []);
 
@@ -36,9 +41,27 @@ export function LivrosPage() {
         return matchesSearch && matchesStatus && matchesCategory;
     });
 
-    const handleDelete = async (id: string) => {
-        if (window.confirm('Tem certeza que deseja excluir este livro?')) {
-            await deleteBook(id);
+    const handleDelete = (id: string) => {
+        setBookToDelete(id);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!bookToDelete) {
+            return;
+        }
+
+        try {
+            setIsDeleting(true);
+            const deleted = await deleteBook(bookToDelete);
+
+            if (deleted) {
+                toast.success('Livro excluído com sucesso.');
+                setBookToDelete(null);
+            } else {
+                toast.error('Não foi possível excluir o livro.');
+            }
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -175,6 +198,17 @@ export function LivrosPage() {
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={Boolean(bookToDelete)}
+                title="Excluir livro"
+                description="Essa ação remove o livro do acervo e não poderá ser desfeita."
+                confirmLabel="Excluir livro"
+                cancelLabel="Cancelar"
+                isLoading={isDeleting}
+                onCancel={() => setBookToDelete(null)}
+                onConfirm={handleConfirmDelete}
+            />
         </div>
     );
 }

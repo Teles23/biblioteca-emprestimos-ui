@@ -5,14 +5,19 @@ import { useCategories } from '../hooks/useCategories';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { BookRepositoryImpl } from '../../../books/infrastructure/BookRepositoryImpl';
 import { getErrorMessage } from '../../../../shared/utils/error';
+import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
+import { useToast } from '../../../../shared/ui/useToast';
 
 export function CategoriasPage() {
   const { categories, loading, error, deleteCategory, refresh } = useCategories();
+  const toast = useToast();
   const [newCategoryName, setNewCategoryName] = useState('');
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [bookCountByCategory, setBookCountByCategory] = useState<Record<string, number>>({});
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const categoryRepo = useMemo(() => new CategoryRepositoryImpl(), []);
   const bookRepo = useMemo(() => new BookRepositoryImpl(), []);
@@ -38,13 +43,31 @@ export function CategoriasPage() {
     c.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if ((bookCountByCategory[id] || 0) > 0) {
       return;
     }
 
-    if (window.confirm('Tem certeza que deseja excluir esta categoria?')) {
-      await deleteCategory(id);
+    setCategoryToDelete(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!categoryToDelete) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      const deleted = await deleteCategory(categoryToDelete);
+
+      if (deleted) {
+        toast.success('Categoria excluída com sucesso.');
+        setCategoryToDelete(null);
+      } else {
+        toast.error('Não foi possível excluir a categoria.');
+      }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -60,8 +83,10 @@ export function CategoriasPage() {
       await categoryRepo.create({ name: newCategoryName.trim() });
       setNewCategoryName('');
       await refresh();
+      toast.success('Categoria criada com sucesso.');
     } catch (err: unknown) {
       setCreateError(getErrorMessage(err, 'Erro ao criar categoria.'));
+      toast.error(getErrorMessage(err, 'Erro ao criar categoria.'));
     } finally {
       setCreating(false);
     }
@@ -183,19 +208,30 @@ export function CategoriasPage() {
             </div>
 
             {(error || createError) && (
-              <div className="alert alert-warning" style={{ marginTop: 16 }}>
+              <p className="mt-4 text-[12px] text-danger font-medium">
                 ⚠️ {createError || error}
-              </div>
+              </p>
             )}
 
             <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-              <div className="alert alert-warning">
+              <div className="note note-warning">
                 ⚠️ Não é possível excluir categorias com livros associados. Reclassifique os livros antes.
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={Boolean(categoryToDelete)}
+        title="Excluir categoria"
+        description="Essa ação remove a categoria selecionada e não poderá ser desfeita."
+        confirmLabel="Excluir categoria"
+        cancelLabel="Cancelar"
+        isLoading={isDeleting}
+        onCancel={() => setCategoryToDelete(null)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
