@@ -51,7 +51,7 @@ export function RegisterPage() {
 
           <div className="auth-features">
             <div className="auth-feature"><div className="auth-feature-dot"></div> Senha forte obrigatória</div>
-            <div className="auth-feature"><div className="auth-feature-dot"></div> Acesso com perfil ROLE_USER</div>
+            <div className="auth-feature"><div className="auth-feature-dot"></div> Acesso com perfil Leitor</div>
             <div className="auth-feature"><div className="auth-feature-dot"></div> Fluxo integrado com API JWT</div>
           </div>
         </div>

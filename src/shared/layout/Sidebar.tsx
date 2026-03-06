@@ -1,5 +1,6 @@
-﻿import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { getPrimaryRoleLabel } from '../utils/roles';
 
 const menuItems = [
   {
@@ -20,6 +21,7 @@ const menuItems = [
 export function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = user?.roles.includes('ROLE_ADMIN') ?? false;
 
   const handleLogout = () => {
     logout();
@@ -29,7 +31,9 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div className="sidebar-logo-icon"><img src="/favicon.svg" alt="LibraManager" className="w-5 h-5" /></div>
+        <div className="sidebar-logo-icon">
+          <img src="/favicon.svg" alt="LibraManager" className="w-5 h-5" />
+        </div>
         <div className="sidebar-logo-text">
           LibraManager
           <span>Sistema de Biblioteca</span>
@@ -41,7 +45,7 @@ export function Sidebar() {
           <div key={idx}>
             <div className="nav-section-label">{section.section}</div>
             {section.items.map((item) => {
-              if (item.adminOnly && !user?.roles.includes('ROLE_ADMIN')) {
+              if (item.adminOnly && !isAdmin) {
                 return null;
               }
 
@@ -59,7 +63,9 @@ export function Sidebar() {
           </div>
         ))}
 
-        <div className="nav-section-label" style={{ marginTop: 8 }}>Conta</div>
+        <div className="nav-section-label" style={{ marginTop: 8 }}>
+          Conta
+        </div>
         <button type="button" onClick={handleLogout} className="nav-item w-full text-left">
           <span className="icon">🚪</span>
           Sair
@@ -73,11 +79,10 @@ export function Sidebar() {
           </div>
           <div className="user-info">
             <div className="user-name">{user?.name || 'Admin Sistema'}</div>
-            <div className="user-role">{user?.roles.includes('ROLE_ADMIN') ? 'ROLE_ADMIN' : 'ROLE_USER'}</div>
+            <div className="user-role">{getPrimaryRoleLabel(user?.roles)}</div>
           </div>
         </div>
       </div>
     </aside>
   );
 }
-

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
 import { useToast } from '../../../../shared/ui/useToast';
+import { getRoleLabel } from '../../../../shared/utils/roles';
 
 export function UsuariosPage() {
   const { users, loading, error, deleteUser, refresh } = useUsers();
@@ -13,12 +14,18 @@ export function UsuariosPage() {
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const filteredUsers = useMemo(() => users.filter((u) => {
-    const matchesSearch = u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'ALL' || u.roles.includes(roleFilter);
-    const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
-    return matchesSearch && matchesRole && matchesStatus;
-  }), [users, searchTerm, roleFilter, statusFilter]);
+  const filteredUsers = useMemo(
+    () =>
+      users.filter((u) => {
+        const matchesSearch =
+          u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          u.email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRole = roleFilter === 'ALL' || u.roles.includes(roleFilter);
+        const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
+        return matchesSearch && matchesRole && matchesStatus;
+      }),
+    [users, searchTerm, roleFilter, statusFilter],
+  );
 
   const handleDelete = (id: string) => {
     setUserToDelete(id);
@@ -51,7 +58,9 @@ export function UsuariosPage() {
           <h1>Usuários</h1>
           <p>Gerencie os leitores e administradores do sistema</p>
         </div>
-        <Link to="/usuarios/leitores/novo" className="btn btn-primary">+ Cadastrar Leitor</Link>
+        <Link to="/usuarios/leitores/novo" className="btn btn-primary">
+          + Cadastrar Leitor
+        </Link>
       </div>
 
       <div className="toolbar">
@@ -68,11 +77,15 @@ export function UsuariosPage() {
 
         <div className="toolbar-filters">
           <select className="filter-select" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
-            <option value="ALL">Todas as roles</option>
-            <option value="ROLE_ADMIN">ROLE_ADMIN</option>
-            <option value="ROLE_USER">ROLE_USER</option>
+            <option value="ALL">Todos os perfis</option>
+            <option value="ROLE_ADMIN">Administrador</option>
+            <option value="ROLE_USER">Leitor</option>
           </select>
-          <select className="filter-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <select
+            className="filter-select"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
             <option value="ALL">Todos os status</option>
             <option value="ACTIVE">Ativo</option>
             <option value="INACTIVE">Inativo</option>
@@ -80,11 +93,17 @@ export function UsuariosPage() {
         </div>
 
         <div className="toolbar-right">
-          <button onClick={refresh} className="btn btn-secondary btn-sm">⬇ Exportar</button>
+          <button onClick={refresh} className="btn btn-secondary btn-sm">
+            ⬇ Exportar
+          </button>
         </div>
       </div>
 
-      {error && <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-[10px] mb-6 text-[13px]">{error}</div>}
+      {error && (
+        <div className="bg-danger-soft border border-danger/20 text-danger p-4 rounded-[10px] mb-6 text-[13px]">
+          {error}
+        </div>
+      )}
 
       <div className="table-wrapper">
         <table className="data-table">
@@ -92,7 +111,7 @@ export function UsuariosPage() {
             <tr>
               <th>Usuário</th>
               <th>Telefone</th>
-              <th>Role</th>
+              <th>Perfil</th>
               <th>Status</th>
               <th>Ações</th>
             </tr>
@@ -101,7 +120,9 @@ export function UsuariosPage() {
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  <td colSpan={5} className="py-8 text-center"><div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" /></td>
+                  <td colSpan={5} className="py-8 text-center">
+                    <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
+                  </td>
                 </tr>
               ))
             ) : filteredUsers.length > 0 ? (
@@ -119,7 +140,12 @@ export function UsuariosPage() {
                   <td style={{ color: 'var(--text-secondary)' }}>{user.phone || '—'}</td>
                   <td>
                     {user.roles.map((role) => (
-                      <span key={role} className={`badge ${role === 'ROLE_ADMIN' ? 'badge-warning' : 'badge-info'} mr-1`}>{role}</span>
+                      <span
+                        key={role}
+                        className={`badge ${role === 'ROLE_ADMIN' ? 'badge-warning' : 'badge-info'} mr-1`}
+                      >
+                        {getRoleLabel(role)}
+                      </span>
                     ))}
                   </td>
                   <td>
@@ -129,22 +155,34 @@ export function UsuariosPage() {
                   </td>
                   <td>
                     <div className="actions-cell">
-                      <button onClick={() => handleDelete(user.id)} className="btn btn-danger btn-sm btn-icon" title="Excluir">🗑️</button>
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="btn btn-danger btn-sm btn-icon"
+                        title="Excluir"
+                      >
+                        🗑️
+                      </button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-text-muted">Nenhum usuário encontrado.</td>
+                <td colSpan={5} className="py-12 text-center text-text-muted">
+                  Nenhum usuário encontrado.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
 
         <div className="pagination">
-          <div className="pagination-info">Mostrando {filteredUsers.length} de {users.length} usuários</div>
-          <div className="pagination-pages"><span className="page-btn active">1</span></div>
+          <div className="pagination-info">
+            Mostrando {filteredUsers.length} de {users.length} usuários
+          </div>
+          <div className="pagination-pages">
+            <span className="page-btn active">1</span>
+          </div>
         </div>
       </div>
 

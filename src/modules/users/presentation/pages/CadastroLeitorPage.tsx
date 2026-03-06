@@ -1,4 +1,4 @@
-﻿import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -52,9 +52,11 @@ export function CadastroLeitorPage() {
       <div className="page-header">
         <div className="page-header-left">
           <h1>Cadastrar Leitor</h1>
-          <p>Adicione um novo usuário ao sistema (ROLE_USER)</p>
+          <p>Adicione um novo usuário ao sistema (Perfil Leitor)</p>
         </div>
-        <Link to="/usuarios" className="btn btn-secondary">← Voltar</Link>
+        <Link to="/usuarios" className="btn btn-secondary">
+          ← Voltar
+        </Link>
       </div>
 
       <div style={{ maxWidth: 640 }}>
@@ -67,9 +69,14 @@ export function CadastroLeitorPage() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="form-grid form-grid-2" style={{ gap: 18 }}>
                 <div className="form-group span-2">
-                  <label>Nome completo <span className="req">*</span></label>
+                  <label>
+                    Nome completo <span className="req">*</span>
+                  </label>
                   <input
-                    {...register('name', { required: 'Nome é obrigatório', minLength: { value: 3, message: 'Mínimo 3 caracteres' } })}
+                    {...register('name', {
+                      required: 'Nome é obrigatório',
+                      minLength: { value: 3, message: 'Mínimo 3 caracteres' },
+                    })}
                     type="text"
                     placeholder="Ex: Ana Paula Lima"
                   />
@@ -77,7 +84,9 @@ export function CadastroLeitorPage() {
                 </div>
 
                 <div className="form-group span-2">
-                  <label>E-mail <span className="req">*</span></label>
+                  <label>
+                    E-mail <span className="req">*</span>
+                  </label>
                   <input
                     {...register('email', { required: 'E-mail é obrigatório' })}
                     type="email"
@@ -93,9 +102,9 @@ export function CadastroLeitorPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Role padrão</label>
+                  <label>Perfil padrão</label>
                   <select disabled>
-                    <option>ROLE_USER</option>
+                    <option>Leitor</option>
                   </select>
                 </div>
               </div>
@@ -104,9 +113,33 @@ export function CadastroLeitorPage() {
                 A senha será <strong>gerada automaticamente</strong> e retornada após o cadastro.
               </div>
 
-              <div style={{ background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', padding: '14px 16px', marginTop: 4, border: '1px dashed var(--border)' }}>
-                <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8, color: 'var(--text-secondary)' }}>SENHA GERADA</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+              <div
+                style={{
+                  background: 'var(--surface-2)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '14px 16px',
+                  marginTop: 4,
+                  border: '1px dashed var(--border)',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    marginBottom: 8,
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  SENHA GERADA
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 14,
+                    color: 'var(--text-primary)',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   {generatedPassword || 'Será exibida após salvar'}
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
@@ -120,7 +153,9 @@ export function CadastroLeitorPage() {
                 <button type="submit" className="btn btn-primary" disabled={loading}>
                   {loading ? 'Cadastrando...' : 'Cadastrar Leitor'}
                 </button>
-                <button type="button" className="btn btn-secondary" onClick={() => navigate('/usuarios')}>Cancelar</button>
+                <button type="button" className="btn btn-secondary" onClick={() => navigate('/usuarios')}>
+                  Cancelar
+                </button>
               </div>
             </form>
           </div>
