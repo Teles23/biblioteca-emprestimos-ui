@@ -1179,6 +1179,29 @@ textarea {
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
+/* ── NOTES ── */
+.note {
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-secondary);
+}
+
+.note-info {
+  background: var(--info-soft);
+  color: #1e40af;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.note-warning {
+  background: var(--warning-soft);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
 /* ── CHECKBOX ── */
 .checkbox-group {
   display: flex;
@@ -1187,6 +1210,120 @@ textarea {
 }
 .checkbox-group input[type="checkbox"] {
   width: auto;
+}
+
+/* ── CONFIRM DIALOG ── */
+.confirm-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fade-in 0.16s ease;
+}
+
+.confirm-dialog-card {
+  width: min(100%, 430px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 22px 22px 18px;
+}
+
+.confirm-dialog-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--danger-soft);
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.confirm-dialog-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.confirm-dialog-description {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.confirm-dialog-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── TOASTS ── */
+.toast-stack {
+  position: fixed;
+  top: calc(var(--header-height) + 14px);
+  right: 16px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 24px));
+}
+
+.toast {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 12px 12px 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.toast-close {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+}
+
+.toast-success {
+  border-color: rgba(34, 197, 94, 0.25);
+  background: var(--success-soft);
+}
+
+.toast-error {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: var(--danger-soft);
+}
+
+.toast-info {
+  border-color: rgba(59, 130, 246, 0.25);
+  background: var(--info-soft);
 }
 
 /* ── RESPONSIVE ── */
@@ -1201,6 +1338,11 @@ textarea {
   .form-group.span-2,
   .form-group.span-3 {
     grid-column: span 1;
+  }
+
+  .toast-stack {
+    top: 12px;
+    right: 12px;
   }
 }
 
