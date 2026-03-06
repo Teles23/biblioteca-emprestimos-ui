@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
 import { useToast } from '../../../../shared/ui/useToast';
+import { formatDateBR } from '../../../../shared/utils/date';
 
 export function AutoresPage() {
     const { authors, loading, error, deleteAuthor, refresh } = useAuthors();
@@ -114,7 +115,7 @@ export function AutoresPage() {
                                     </td>
                                     <td>
                                         <div className="text-text-secondary text-[13px]">
-                                            {new Date(author.createdAt).toLocaleDateString()}
+                                            {formatDateBR(author.createdAt)}
                                         </div>
                                     </td>
                                     <td className="text-right">

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error'; // Added import for getErrorMessage
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
 import { useToast } from '../../../../shared/ui/useToast';
+import { formatDateBR } from '../../../../shared/utils/date';
 
 export function EmprestimosPage() {
     const { loans, loading, error, fetchActiveLoans, returnBook } = useLoans();
@@ -153,10 +154,10 @@ export function EmprestimosPage() {
                                             <span className="text-[13px]">{loan.user?.name}</span>
                                         </div>
                                     </td>
-                                    <td className="text-[13px] text-text-secondary">{new Date(loan.loanDate).toLocaleDateString()}</td>
+                                    <td className="text-[13px] text-text-secondary">{formatDateBR(loan.loanDate)}</td>
                                     <td>
                                         <div className={`text-[13px] ${loan.status === 'OVERDUE' ? 'text-danger font-bold' : 'text-text-primary'}`}>
-                                            {new Date(loan.dueDate).toLocaleDateString()}
+                                            {formatDateBR(loan.dueDate)}
                                             {loan.lateDays > 0 && <span className="ml-1 text-[11px] opacity-70">({loan.lateDays}d)</span>}
                                         </div>
                                     </td>

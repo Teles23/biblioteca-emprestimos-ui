@@ -1,9 +1,8 @@
-﻿import { useEffect, useState, useCallback, useMemo } from 'react';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 
 import { LoanRepositoryImpl } from '../../infrastructure/LoanRepositoryImpl';
 import type { Loan } from '../../../../shared/types';
+import { formatDateLongBR } from '../../../../shared/utils/date';
 
 export function MeusEmprestimosPage() {
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -76,13 +75,13 @@ export function MeusEmprestimosPage() {
                     </div>
                   </td>
                   <td>
-                    <div className="text-[13px] text-text-secondary">
-                      {format(new Date(loan.loanDate), "dd 'de' MMMM", { locale: ptBR })}
-                    </div>
+                    <div className="text-[13px] text-text-secondary">{formatDateLongBR(loan.loanDate, false)}</div>
                   </td>
                   <td>
-                    <div className={`text-[13px] font-semibold ${loan.status === 'OVERDUE' ? 'text-danger' : 'text-accent'}`}>
-                      {format(new Date(loan.dueDate), "dd 'de' MMMM, yyyy", { locale: ptBR })}
+                    <div
+                      className={`text-[13px] font-semibold ${loan.status === 'OVERDUE' ? 'text-danger' : 'text-accent'}`}
+                    >
+                      {formatDateLongBR(loan.dueDate)}
                       {loan.lateDays > 0 && (
                         <span className="ml-1 text-[11px] font-black underline">({loan.lateDays}d de atraso)</span>
                       )}
@@ -111,7 +110,9 @@ export function MeusEmprestimosPage() {
               <tr>
                 <td colSpan={4} className="py-16 text-center">
                   <div className="text-[14px] font-bold text-text-primary">Você não possui empréstimos ativos</div>
-                  <div className="text-[12px] text-text-secondary mt-1">Explore o acervo e escolha sua próxima leitura.</div>
+                  <div className="text-[12px] text-text-secondary mt-1">
+                    Explore o acervo e escolha sua próxima leitura.
+                  </div>
                 </td>
               </tr>
             )}

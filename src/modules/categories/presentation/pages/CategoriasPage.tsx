@@ -5,6 +5,7 @@ import { useCategories } from '../hooks/useCategories';
 import { CategoryRepositoryImpl } from '../../infrastructure/CategoryRepositoryImpl';
 import { BookRepositoryImpl } from '../../../books/infrastructure/BookRepositoryImpl';
 import { getErrorMessage } from '../../../../shared/utils/error';
+import { formatDateBR } from '../../../../shared/utils/date';
 import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
 import { useToast } from '../../../../shared/ui/useToast';
 
@@ -147,7 +148,7 @@ export function CategoriasPage() {
                           {booksCount} {booksCount === 1 ? 'livro' : 'livros'}
                         </span>
                       </td>
-                      <td>{new Date(cat.createdAt).toLocaleDateString('pt-BR')}</td>
+                      <td>{formatDateBR(cat.createdAt)}</td>
                       <td>
                         <div className="actions-cell">
                           <Link to={`/categorias/${cat.id}/editar`} className="btn btn-secondary btn-sm btn-icon">✏️</Link>
