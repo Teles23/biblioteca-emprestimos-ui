@@ -4,12 +4,14 @@ import type { Loan } from '../../../shared/types';
 export interface CreateLoanDTO {
     bookId: string;
     userId: string;
+    loanDate?: string;
+    dueDate?: string;
 }
 
 export interface ILoanRepository {
     listActive(userId?: string): Promise<Loan[]>;
     listOverdue(): Promise<Loan[]>;
-    history(filters: { userId?: string; bookId?: string }): Promise<Loan[]>;
+    history(filters: { userId?: string; bookId?: string; status?: string; startDate?: string; endDate?: string }): Promise<Loan[]>;
     create(data: CreateLoanDTO): Promise<Loan>;
     returnBook(loanId: string): Promise<Loan>;
 }
@@ -32,7 +34,7 @@ export class LoanRepositoryImpl implements ILoanRepository {
         return response.data;
     }
 
-    async history(filters: { userId?: string; bookId?: string }): Promise<Loan[]> {
+    async history(filters: { userId?: string; bookId?: string; status?: string; startDate?: string; endDate?: string }): Promise<Loan[]> {
         const response = await httpClient.get<Loan[]>('/loans/history', {
             params: filters
         });

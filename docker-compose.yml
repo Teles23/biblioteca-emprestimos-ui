@@ -1,33 +1,69 @@
+version: '3.8'
+
 services:
-  frontend:
-    build: .
+  # Serviço da API (Backend)
+  backend:
+    build:
+      context: ./biblioteca-emprestimos-api
+      dockerfile: Dockerfile
+    container_name: libramanager-api
     ports:
-      - "80:80"
+      - "3333:3333"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/libramanager?schema=public
+      - JWT_SECRET=seu-segredo-super-secreto-aqui # Mova para um arquivo .env na raiz do backend
+      - PORT=3333
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - libramanager-network
+    volumes:
+      - ./biblioteca-emprestimos-api:/usr/app
+      - /usr/app/node_modules
+
+  # Serviço da UI (Frontend)
+  frontend:
+    build:
+      context: ./biblioteca-emprestimos-ui
+      dockerfile: Dockerfile
+    container_name: libramanager-ui
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3333
     depends_on:
       - backend
     networks:
       - libramanager-network
+    volumes:
+      - ./biblioteca-emprestimos-ui:/app
+      - /app/node_modules
 
-  backend:
-    image: node:20-alpine # Assumindo imagem ou build do backend
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/libramanager
-    networks:
-      - libramanager-network
-
+  # Serviço do Banco de Dados (PostgreSQL)
   db:
     image: postgres:15-alpine
+    container_name: libramanager-db
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=libramanager
-    ports:
-      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - libramanager-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d libramanager" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   libramanager-network:
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

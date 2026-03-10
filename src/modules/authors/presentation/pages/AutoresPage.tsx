@@ -125,9 +125,9 @@ export function AutoresPage() {
                   </td>
                   <td>
                     <div className="text-text-secondary text-[13px]">
-                      {author.books && author.books.length > 0 ? (
+                      {author.bookCount !== undefined && author.bookCount > 0 ? (
                         <span className="badge badge-info">
-                          {author.books.length} livro(s)
+                          {author.bookCount} livro(s)
                         </span>
                       ) : (
                         <span className="text-text-muted">Nenhum</span>

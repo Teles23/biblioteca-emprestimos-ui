@@ -1,4 +1,4 @@
-﻿import { useLoans } from '../hooks/useLoans';
+import { useLoans } from '../hooks/useLoans';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getErrorMessage } from '../../../../shared/utils/error'; // Added import for getErrorMessage
@@ -113,32 +113,36 @@ export function EmprestimosPage() {
                 <table className="data-table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Livro</th>
                             <th>Usuário</th>
                             <th>Empréstimo</th>
                             <th>Devolução</th>
                             <th>Status</th>
-                            <th className="text-right">Ações</th>
+                            <th className="text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             Array.from({ length: 5 }).map((_, i) => (
                                 <tr key={i} className="animate-pulse">
-                                    <td colSpan={6} className="py-8 text-center">
+                                    <td colSpan={7} className="py-8 text-center">
                                         <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
                                     </td>
                                 </tr>
                             ))
                         ) : error ? (
                             <tr>
-                                <td colSpan={6} className="py-12 text-center text-danger">
+                                <td colSpan={7} className="py-12 text-center text-danger">
                                     {error}
                                 </td>
                             </tr>
                         ) : filteredLoans.length > 0 ? (
-                            filteredLoans.map((loan) => (
+                            filteredLoans.map((loan, index) => (
                                 <tr key={loan.id} className={loan.status === 'OVERDUE' ? 'bg-danger/[0.03]' : ''}>
+                                    <td className="font-mono text-[12px] text-text-muted">
+                                        #{String(filteredLoans.length - index).padStart(3, '0')}
+                                    </td>
                                     <td>
                                         <div className="flex items-center gap-2.5">
                                             <div className={`w-8 h-8 rounded-[4px] flex items-center justify-center shrink-0 ${loan.status === 'OVERDUE' ? 'bg-danger/20' : 'bg-accent/20'
@@ -166,7 +170,7 @@ export function EmprestimosPage() {
                                             ● {loan.status === 'OVERDUE' ? 'Atrasado' : 'Ativo'}
                                         </span>
                                     </td>
-                                    <td className="text-right">
+                                    <td className="text-center">
                                         <button onClick={() => handleReturn(loan.id)} className="btn btn-primary btn-sm">
                                             ↩ Devolver
                                         </button>
@@ -175,7 +179,7 @@ export function EmprestimosPage() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={6} className="py-12 text-center text-text-muted">
+                                <td colSpan={7} className="py-12 text-center text-text-muted">
                                     Nenhum empréstimo encontrado.
                                 </td>
                             </tr>

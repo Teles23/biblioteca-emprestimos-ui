@@ -138,6 +138,10 @@ export const router = createBrowserRouter([
                                 path: 'leitores/novo',
                                 element: <CadastroLeitorPage />,
                             },
+                            {
+                                path: ':id/editar',
+                                element: <CadastroUsuarioPage />,
+                            },
                         ],
                     },
                 ],

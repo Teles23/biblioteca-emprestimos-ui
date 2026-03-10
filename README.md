@@ -79,9 +79,12 @@ npm run build
 - [x] **Livros**: CRUD completo com listagem refinada, busca e filtros por categoria/status.
 - [x] **Autores**: CRUD completo integrado com livros.
 - [x] **Categorias**: CRUD completo com integração na listagem de livros.
-- [x] **Empréstimos**: Fluxo de empréstimo com cálculo automático de data de devolução.
-- [x] **Devoluções**: Registro de devolução com cálculo de dias de atraso.
-- [x] **Histórico**: Visualização completa de transações passadas.
+### Módulo de Empréstimos & Histórico
+- **Listagem Ativa**: Visualização de todos os empréstimos em andamento com numeração de registros (`#001`).
+- **Histórico Avançado**: Filtros por Usuário, Livro, Status e Intervalo de Datas. Tabela detalhada com datas de empréstimo, previsão e devolução real.
+- **Registro com Preview**: Novo layout em duas colunas com pré-visualização em tempo real do livro e resumo dos dados antes da confirmação.
+- **Cálculo Automático**: Data de devolução sugerida automaticamente para 14 dias.
+- **Indicadores de Atraso**: Destaque visual e contagem de dias para livros em atraso.
 - [x] **Layout**: Interface moderna e responsiva baseada em Clean Architecture e TailwindCSS. Totalmente compatível com Mobile, Tablet e Desktop.
 
 ## Responsividade

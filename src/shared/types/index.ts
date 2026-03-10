@@ -7,6 +7,7 @@ export interface User {
   status: "ACTIVE" | "INACTIVE";
   createdAt: string;
   updatedAt: string;
+  loanCount?: number;
   _count?: {
     loans: number;
   };
@@ -33,6 +34,7 @@ export interface Author {
   books?: Book[];
   createdAt: string;
   updatedAt: string;
+  bookCount?: number;
 }
 
 export interface Category {
