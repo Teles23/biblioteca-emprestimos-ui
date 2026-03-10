@@ -82,7 +82,13 @@ npm run build
 - [x] **Empréstimos**: Fluxo de empréstimo com cálculo automático de data de devolução.
 - [x] **Devoluções**: Registro de devolução com cálculo de dias de atraso.
 - [x] **Histórico**: Visualização completa de transações passadas.
-- [x] **Layout**: Interface moderna e responsiva baseada em Clean Architecture e TailwindCSS.
+- [x] **Layout**: Interface moderna e responsiva baseada em Clean Architecture e TailwindCSS. Totalmente compatível com Mobile, Tablet e Desktop.
+
+## Responsividade
+A aplicação foi otimizada para diferentes tamanhos de tela:
+- **Desktop (> 1024px)**: Sidebar fixa e visualização completa de dados.
+- **Tablet (768px - 1024px)**: Sidebar retrátil e grids adaptados.
+- **Mobile (< 768px)**: Menu hamburger, layouts de coluna única e inputs otimizados para touch.
 
 ### Não Implementadas / Próximos Passos
 - [ ] **Testes de Integração**: Expandir cobertura de testes para fluxos de ponta a ponta no frontend.
