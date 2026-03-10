@@ -10,9 +10,7 @@ import type { Book, User } from '../../../../shared/types';
 import { useToast } from '../../../../shared/ui/useToast';
 import { formatDateBR } from '../../../../shared/utils/date';
 import { addDays } from 'date-fns';
-
 import { loanSchema, type LoanFormValues } from '../schemas/loan.schema';
-
 export function RegistrarEmprestimoPage() {
     const navigate = useNavigate();
     const toast = useToast();
@@ -34,16 +32,20 @@ export function RegistrarEmprestimoPage() {
         formState: { errors },
     } = useForm<LoanFormValues>({
         resolver: zodResolver(loanSchema),
+        defaultValues: {
+            loanDate: new Date().toISOString().split('T')[0]
+        }
     });
 
     const selectedBookId = useWatch({ control, name: 'bookId' });
     const selectedUserId = useWatch({ control, name: 'userId' });
+    const watchedLoanDate = useWatch({ control, name: 'loanDate' }) || new Date().toISOString().split('T')[0];
 
     const selectedBook = useMemo(() => books.find(b => b.id === selectedBookId), [books, selectedBookId]);
     const selectedUser = useMemo(() => users.find(u => u.id === selectedUserId), [users, selectedUserId]);
 
-    const loanDate = useMemo(() => new Date(), []);
-    const dueDate = useMemo(() => addDays(loanDate, 14), [loanDate]);
+    const loanDateObj = useMemo(() => new Date(watchedLoanDate + 'T12:00:00'), [watchedLoanDate]);
+    const dueDate = useMemo(() => addDays(loanDateObj, 14), [loanDateObj]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -53,7 +55,6 @@ export function RegistrarEmprestimoPage() {
                     bookRepo.list(),
                     userRepo.list()
                 ]);
-                // Filter available books only as per prototype
                 setBooks(booksData.filter(b => b.status === 'AVAILABLE'));
                 setUsers(usersData);
             } catch {
@@ -69,7 +70,16 @@ export function RegistrarEmprestimoPage() {
         try {
             setLoading(true);
             setError(null);
-            await loanRepo.create(data);
+            
+            const finalLoanDate = new Date(data.loanDate! + 'T12:00:00');
+            const finalDueDate = addDays(finalLoanDate, 14);
+
+            await loanRepo.create({
+                ...data,
+                loanDate: finalLoanDate.toISOString(),
+                dueDate: finalDueDate.toISOString()
+            });
+            
             toast.success('Empréstimo registrado com sucesso.');
             navigate('/emprestimos');
         } catch (err: unknown) {
@@ -147,7 +157,11 @@ export function RegistrarEmprestimoPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 span-2">
                                     <div className="form-group">
                                         <label>Data do Empréstimo</label>
-                                        <input type="text" value={formatDateBR(loanDate)} disabled className="bg-surface-2 cursor-not-allowed" />
+                                        <input 
+                                            type="date" 
+                                            {...register('loanDate')} 
+                                            className="bg-surface-2" 
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <label>Devolução Prevista</label>
@@ -186,7 +200,7 @@ export function RegistrarEmprestimoPage() {
 
                         <div className="mb-4">
                             <div className="text-[10px] uppercase text-[#a0a8b8] font-semibold tracking-wider">Data Empréstimo</div>
-                            <div className="text-[13px] font-mono text-accent mt-0.5">{formatDateBR(loanDate)}</div>
+                            <div className="text-[13px] font-mono text-accent mt-0.5">{formatDateBR(loanDateObj)}</div>
                         </div>
 
                         <div className="mb-4">

@@ -4,6 +4,8 @@ import type { Loan } from '../../../shared/types';
 export interface CreateLoanDTO {
     bookId: string;
     userId: string;
+    loanDate?: string;
+    dueDate?: string;
 }
 
 export interface ILoanRepository {
