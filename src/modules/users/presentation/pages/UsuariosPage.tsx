@@ -1,16 +1,16 @@
-import { useUsers } from '../hooks/useUsers';
-import { Link } from 'react-router-dom';
-import { useMemo, useState } from 'react';
-import { ConfirmDialog } from '../../../../shared/ui/ConfirmDialog';
-import { useToast } from '../../../../shared/ui/useToast';
-import { getRoleLabel } from '../../../../shared/utils/roles';
+import { useUsers } from "../hooks/useUsers";
+import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { ConfirmDialog } from "../../../../shared/ui/ConfirmDialog";
+import { useToast } from "../../../../shared/ui/useToast";
+import { getRoleLabel } from "../../../../shared/utils/roles";
 
 export function UsuariosPage() {
   const { users, loading, error, deleteUser, refresh } = useUsers();
   const toast = useToast();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('ALL');
-  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -20,8 +20,10 @@ export function UsuariosPage() {
         const matchesSearch =
           u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           u.email.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRole = roleFilter === 'ALL' || u.roles.includes(roleFilter);
-        const matchesStatus = statusFilter === 'ALL' || u.status === statusFilter;
+        const matchesRole =
+          roleFilter === "ALL" || u.roles.includes(roleFilter);
+        const matchesStatus =
+          statusFilter === "ALL" || u.status === statusFilter;
         return matchesSearch && matchesRole && matchesStatus;
       }),
     [users, searchTerm, roleFilter, statusFilter],
@@ -41,10 +43,10 @@ export function UsuariosPage() {
       const deleted = await deleteUser(userToDelete);
 
       if (deleted) {
-        toast.success('Usuário removido com sucesso.');
+        toast.success("Usuário removido com sucesso.");
         setUserToDelete(null);
       } else {
-        toast.error('Não foi possível remover o usuário.');
+        toast.error("Não foi possível remover o usuário.");
       }
     } finally {
       setIsDeleting(false);
@@ -64,19 +66,22 @@ export function UsuariosPage() {
       </div>
 
       <div className="toolbar">
-        <div className="toolbar-search">
-          <span>🔍</span>
-          <input
-            type="text"
-            placeholder="Buscar por nome ou e-mail..."
-            className="w-full bg-transparent border-none outline-none text-[13px]"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="toolbar-filters">
-          <select className="filter-select" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
+        <div className="flex flex-1 gap-3 flex-wrap md:flex-nowrap">
+          <div className="toolbar-search flex-1 min-w-[200px]">
+            <span>🔍</span>
+            <input
+              type="text"
+              placeholder="Buscar por nome ou e-mail..."
+              className="w-full bg-transparent border-none outline-none text-[13px]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <select
+            className="filter-select"
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+          >
             <option value="ALL">Todos os perfis</option>
             <option value="ROLE_ADMIN">Administrador</option>
             <option value="ROLE_USER">Leitor</option>
@@ -94,7 +99,7 @@ export function UsuariosPage() {
 
         <div className="toolbar-right">
           <button onClick={refresh} className="btn btn-secondary btn-sm">
-            ⬇ Exportar
+            🔄 Atualizar
           </button>
         </div>
       </div>
@@ -113,14 +118,15 @@ export function UsuariosPage() {
               <th>Telefone</th>
               <th>Perfil</th>
               <th>Status</th>
-              <th>Ações</th>
+              <th>Empréstimos</th>
+              <th className="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  <td colSpan={5} className="py-8 text-center">
+                  <td colSpan={6} className="py-8 text-center">
                     <div className="h-4 bg-surface-3 rounded w-3/4 mx-auto" />
                   </td>
                 </tr>
@@ -130,34 +136,52 @@ export function UsuariosPage() {
                 <tr key={user.id}>
                   <td>
                     <div className="user-cell">
-                      <div className="avatar">{user.name?.substring(0, 2).toUpperCase() || 'US'}</div>
+                      <div className="avatar">
+                        {user.name?.substring(0, 2).toUpperCase() || "US"}
+                      </div>
                       <div>
                         <div className="user-cell-name">{user.name}</div>
                         <div className="user-cell-email">{user.email}</div>
                       </div>
                     </div>
                   </td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{user.phone || '—'}</td>
+                  <td style={{ color: "var(--text-secondary)" }}>
+                    {user.phone || "—"}
+                  </td>
                   <td>
                     {user.roles.map((role) => (
                       <span
                         key={role}
-                        className={`badge ${role === 'ROLE_ADMIN' ? 'badge-warning' : 'badge-info'} mr-1`}
+                        className={`badge ${role === "ROLE_ADMIN" ? "badge-warning" : "badge-info"} mr-1`}
                       >
                         {getRoleLabel(role)}
                       </span>
                     ))}
                   </td>
                   <td>
-                    <span className={`badge ${user.status === 'ACTIVE' ? 'badge-success' : 'badge-neutral'}`}>
-                      ● {user.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                    <span
+                      className={`badge ${user.status === "ACTIVE" ? "badge-success" : "badge-neutral"}`}
+                    >
+                      ● {user.status === "ACTIVE" ? "Ativo" : "Inativo"}
                     </span>
                   </td>
                   <td>
-                    <div className="actions-cell">
+                    <span className="badge badge-info">
+                      {user._count?.loans || 0}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="actions-cell justify-center">
+                      <Link
+                        to={`/usuarios/${user.id}/editar`}
+                        className="icon-btn"
+                        title="Editar"
+                      >
+                        ✏️
+                      </Link>
                       <button
                         onClick={() => handleDelete(user.id)}
-                        className="btn btn-danger btn-sm btn-icon"
+                        className="icon-btn text-danger"
                         title="Excluir"
                       >
                         🗑️
@@ -168,7 +192,7 @@ export function UsuariosPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-text-muted">
+                <td colSpan={6} className="py-12 text-center text-text-muted">
                   Nenhum usuário encontrado.
                 </td>
               </tr>
