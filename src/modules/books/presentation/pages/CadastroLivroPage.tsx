@@ -57,6 +57,10 @@ export function CadastroLivroPage() {
                     setValue('publicationYear', bookData.publicationYear);
                     setValue('categoryId', bookData.categoryId);
                     setValue('authorIds', bookData.authors?.map((a: Author) => a.id) || []);
+                    setValue('synopsis', bookData.synopsis || '');
+                    setValue('pages', bookData.pages || '');
+                    setValue('publisher', bookData.publisher || '');
+                    setValue('coverUrl', bookData.coverUrl || '');
                 } catch {
                     setError('Erro ao carregar dados do livro.');
                 } finally {
@@ -158,11 +162,37 @@ export function CadastroLivroPage() {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>ISBN (Opcional)</label>
+                                    <label>Editora</label>
                                     <input
+                                        {...register('publisher')}
                                         type="text"
-                                        placeholder="978-85-..."
+                                        placeholder="Ex: Companhia das Letras"
+                                        className={errors.publisher ? 'border-danger' : ''}
                                     />
+                                    {errors.publisher && <span className="text-[11px] text-danger mt-1">{errors.publisher.message}</span>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Número de Páginas</label>
+                                    <input
+                                        {...register('pages', { 
+                                            setValueAs: v => v === '' ? undefined : parseInt(v, 10) 
+                                        })}
+                                        type="number"
+                                        placeholder="Ex: 320"
+                                        className={errors.pages ? 'border-danger' : ''}
+                                    />
+                                    {errors.pages && <span className="text-[11px] text-danger mt-1">{errors.pages.message}</span>}
+                                </div>
+
+                                <div className="form-group span-2">
+                                    <label>Sinopse</label>
+                                    <textarea
+                                        {...register('synopsis')}
+                                        placeholder="Breve resumo sobre a obra..."
+                                        className={errors.synopsis ? 'border-danger' : ''}
+                                    />
+                                    {errors.synopsis && <span className="text-[11px] text-danger mt-1">{errors.synopsis.message}</span>}
                                 </div>
 
                                 <div className="form-group span-2">
@@ -244,11 +274,31 @@ export function CadastroLivroPage() {
                         <div className="card">
                             <div className="card-header"><div className="card-title">Capa do Livro</div></div>
                             <div className="card-body">
-                                <div className="border-2 border-dashed border-border rounded-sm p-8 text-center cursor-pointer hover:border-accent transition-all text-text-muted">
-                                    <div className="text-[32px] mb-2">🖼️</div>
-                                    <div className="text-[13px] font-bold">Arraste ou clique</div>
-                                    <div className="text-[11px]">PNG, JPG até 5MB</div>
+                                <div className="form-group">
+                                    <label>URL da Capa</label>
+                                    <input
+                                        {...register('coverUrl')}
+                                        type="url"
+                                        placeholder="https://exemplo.com/capa.jpg"
+                                        className={errors.coverUrl ? 'border-danger' : ''}
+                                    />
+                                    {errors.coverUrl && <span className="text-[11px] text-danger mt-1">{errors.coverUrl.message}</span>}
+                                    <div className="form-hint mt-2 mb-2">Ou insira uma URL válida para exibir uma imagem existente.</div>
                                 </div>
+                                
+                                {watch('coverUrl') ? (
+                                    <div className="mt-4 border border-border rounded-sm overflow-hidden flex justify-center bg-surface-2 p-2 relative group">
+                                        <img src={watch('coverUrl') || ''} alt="Capa" className="max-h-[200px] object-contain rounded-sm shadow-sm" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                                        <div className="hidden text-text-muted text-[12px] p-4 text-center">URL inválida ou imagem não encontrada.</div>
+                                        <button type="button" onClick={() => setValue('coverUrl', '', { shouldValidate: true, shouldDirty: true })} className="absolute top-2 right-2 bg-danger text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                                    </div>
+                                ) : (
+                                    <div className="mt-4 border-2 border-dashed border-border rounded-sm p-4 text-center cursor-pointer hover:border-accent transition-all text-text-muted bg-surface-2">
+                                        <div className="text-[24px] mb-1">🖼️</div>
+                                        <div className="text-[12px] font-bold">Upload (Em breve)</div>
+                                        <div className="text-[10px]">Por enquanto, use o campo de URL acima</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
