@@ -15,7 +15,7 @@ export function AppLayout() {
                   onClick={() => setIsSidebarOpen(false)}
                 />
             )}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-h-screen">
                 <Header onToggleSidebar={() => setIsSidebarOpen(true)} />
                 <main className="main-content">
                     <Outlet />

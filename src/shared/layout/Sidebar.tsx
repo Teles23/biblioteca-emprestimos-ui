@@ -34,7 +34,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   };
 
   return (
-    <aside className={`sidebar ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} transition-transform fixed md:static z-50 h-full`}>
+    <aside className={`sidebar ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} transition-transform fixed inset-y-0 left-0 z-50`}>
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon">
           <img src="/favicon.svg" alt="LibraManager" className="w-5 h-5" />

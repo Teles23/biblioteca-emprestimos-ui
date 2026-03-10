@@ -224,7 +224,7 @@ body {
 .header {
   position: fixed;
   top: 0;
-  left: var(--sidebar-width);
+  left: 0;
   right: 0;
   height: var(--header-height);
   background: var(--surface);
@@ -235,6 +235,13 @@ body {
   gap: 16px;
   z-index: 50;
   box-shadow: var(--shadow-sm);
+  transition: padding-left 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .header {
+    left: var(--sidebar-width);
+  }
 }
 
 .header-title {
@@ -321,11 +328,16 @@ body {
 
 /* ── MAIN CONTENT ── */
 .main-content {
-  margin-left: var(--sidebar-width);
+  padding: 24px;
   margin-top: var(--header-height);
-  padding: 28px 28px;
   min-height: calc(100vh - var(--header-height));
   flex: 1;
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    margin-left: var(--sidebar-width);
+  }
 }
 
 /* ── PAGE HEADER ── */
@@ -1372,20 +1384,6 @@ textarea {
 }
 
 @media (max-width: 768px) {
-  :root {
-    --sidebar-width: 260px;
-  }
-
-  .main-content {
-    margin-left: 0;
-    padding: 20px 16px;
-  }
-
-  .sidebar {
-    width: var(--sidebar-width);
-    z-index: 100;
-  }
-
   .stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
