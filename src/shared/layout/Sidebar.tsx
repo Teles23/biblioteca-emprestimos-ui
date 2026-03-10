@@ -18,7 +18,12 @@ const menuItems = [
   },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const isAdmin = user?.roles.includes('ROLE_ADMIN') ?? false;
@@ -29,7 +34,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} transition-transform fixed md:static z-50 h-full`}>
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon">
           <img src="/favicon.svg" alt="LibraManager" className="w-5 h-5" />
@@ -54,6 +59,7 @@ export function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                  onClick={onClose}
                 >
                   <span className="icon">{item.icon}</span>
                   {item.label}
