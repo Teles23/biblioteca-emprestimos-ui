@@ -1,4 +1,4 @@
-﻿import { httpClient } from '../../../shared/infra/httpClient';
+import { httpClient } from '../../../shared/infra/httpClient';
 import type { User } from '../../../shared/types';
 
 export interface CreateUserDTO {
@@ -16,6 +16,7 @@ export interface IUserRepository {
   list(): Promise<User[]>;
   findById(id: string): Promise<User>;
   create(data: CreateUserDTO): Promise<CreateUserResponse>;
+  update(id: string, data: Partial<CreateUserDTO>): Promise<User>;
   delete(id: string): Promise<void>;
 }
 
@@ -32,6 +33,11 @@ export class UserRepositoryImpl implements IUserRepository {
 
   async create(data: CreateUserDTO): Promise<CreateUserResponse> {
     const response = await httpClient.post<CreateUserResponse>('/users', data);
+    return response.data;
+  }
+
+  async update(id: string, data: Partial<CreateUserDTO>): Promise<User> {
+    const response = await httpClient.put<User>(`/users/${id}`, data);
     return response.data;
   }
 

@@ -167,7 +167,7 @@ export function UsuariosPage() {
                   </td>
                   <td>
                     <span className="badge badge-info">
-                      {user._count?.loans || 0}
+                      {user.loanCount || 0}
                     </span>
                   </td>
                   <td>
