@@ -9,7 +9,7 @@ describe('AuthRepositoryImpl', () => {
 
     it('should call login endpoint with correct credentials', async () => {
         const credentials = { email: 'test@test.com', password: 'password' };
-        const mockResponse = { data: { accessToken: 'token', user: { id: '1', email: 'test@test.com', roles: ['ROLE_USER'] } } };
+        const mockResponse = { data: { accessToken: 'token', user: { id: '1', name: 'Test User', email: 'test@test.com', roles: ['ROLE_USER'] } } };
 
         vi.mocked(httpClient.post).mockResolvedValueOnce(mockResponse);
 

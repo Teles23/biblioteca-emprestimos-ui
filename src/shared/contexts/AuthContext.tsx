@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const userInfo: UserInfo = {
             ...response.user,
-            name: response.user.name || credentials.email.split('@')[0],
+            name: response.user.name,
         };
 
         setUser(userInfo);
