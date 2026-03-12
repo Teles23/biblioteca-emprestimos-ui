@@ -1,4 +1,4 @@
-﻿import { useForm } from "react-hook-form";
+import { type Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
@@ -23,7 +23,7 @@ export function CadastroAutorPage() {
     setValue,
     formState: { errors },
   } = useForm<AuthorFormValues>({
-    resolver: zodResolver(authorSchema),
+    resolver: zodResolver(authorSchema) as Resolver<AuthorFormValues>,
   });
 
   useEffect(() => {
