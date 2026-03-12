@@ -74,18 +74,20 @@ npm run build
 ## Funcionalidades
 
 ### Implementadas
-- [x] **Autenticação**: Login, Registro e logout com persistência via JWT.
+- [x] **Autenticação**: Login, Registro (com confirmação de senha) e logout com persistência via JWT.
 - [x] **Dashboard**: Indicadores em tempo real (Livros, Usuários, Empréstimos Ativos/Atrasados) e lista de atividades recentes.
 - [x] **Livros**: CRUD completo com listagem refinada, busca e filtros por categoria/status.
 - [x] **Autores**: CRUD completo integrado com livros.
 - [x] **Categorias**: CRUD completo com integração na listagem de livros.
+- [x] **Cadastro de Livro**: Campo de ano limitado a 4 dígitos.
+- [x] **Perfil do Usuário**: Menu de usuário com dropdown de ações.
+
 ### Módulo de Empréstimos & Histórico
-- **Listagem Ativa**: Visualização de todos os empréstimos em andamento com numeração de registros (`#001`).
-- **Histórico Avançado**: Filtros por Usuário, Livro, Status e Intervalo de Datas. Tabela detalhada com datas de empréstimo, previsão e devolução real.
+- **Leitor**: Acesso somente a “Meus Empréstimos” e “Novo Empréstimo” (autoatendido).
 - **Registro com Preview**: Novo layout em duas colunas com pré-visualização em tempo real do livro e resumo dos dados antes da confirmação.
+- **Detalhes do Livro**: Visualização rápida de ano, editora, páginas e sinopse ao selecionar o livro.
 - **Cálculo Automático**: Data de devolução sugerida automaticamente para 14 dias.
 - **Indicadores de Atraso**: Destaque visual e contagem de dias para livros em atraso.
-- [x] **Layout**: Interface moderna e responsiva baseada em Clean Architecture e TailwindCSS. Totalmente compatível com Mobile, Tablet e Desktop.
 
 ## Responsividade
 A aplicação foi otimizada para diferentes tamanhos de tela:
@@ -105,4 +107,4 @@ O frontend consome a API REST em `VITE_API_URL`. Todas as rotas (exceto login e 
 | Role | Acesso |
 |---|---|
 | `ROLE_ADMIN` | Painel completo |
-| `ROLE_USER` | Apenas "Meus Empréstimos" |
+| `ROLE_USER` | Apenas “Meus Empréstimos” e “Novo Empréstimo” |
