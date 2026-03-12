@@ -153,8 +153,15 @@ export function CadastroLivroPage() {
                                 <div className="form-group">
                                     <label>Ano de Publicação <span className="req">*</span></label>
                                     <input
-                                        {...register('publicationYear', { valueAsNumber: true })}
-                                        type="number"
+                                        {...register('publicationYear', {
+                                            setValueAs: v => {
+                                                const digits = String(v).replace(/\D/g, '').slice(0, 4);
+                                                return digits ? parseInt(digits, 10) : undefined;
+                                            }
+                                        })}
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={4}
                                         placeholder="AAAA"
                                         className={errors.publicationYear ? 'border-danger' : ''}
                                     />
