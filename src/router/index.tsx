@@ -96,6 +96,10 @@ export const router = createBrowserRouter([
                         element: <MeusEmprestimosPage />,
                     },
                     {
+                        path: 'meus-emprestimos/novo',
+                        element: <RegistrarEmprestimoPage />,
+                    },
+                    {
                         path: 'emprestimos',
                         children: [
                             {

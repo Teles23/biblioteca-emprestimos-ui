@@ -25,6 +25,7 @@ const routeLabels: Array<{ pattern: string; label: string }> = [
   { pattern: "/emprestimos/novo", label: "Empréstimos › Cadastrar" },
   { pattern: "/historico", label: "Histórico" },
   { pattern: "/meus-emprestimos", label: "Meus Empréstimos" },
+  { pattern: "/meus-emprestimos/novo", label: "Meus Empréstimos › Novo" },
 ];
 
 function resolveCurrentLabel(pathname: string): string {

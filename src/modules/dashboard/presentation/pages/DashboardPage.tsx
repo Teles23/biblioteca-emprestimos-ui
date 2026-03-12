@@ -1,11 +1,12 @@
 import { useAuth } from '../../../../shared/contexts/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { DashboardService, type DashboardStats } from '../../data/services/DashboardService';
 import { formatRelativeDate, getBrazilGreeting } from '../../../../shared/utils/date';
 
 export function DashboardPage() {
   const { user } = useAuth();
+  const isAdmin = user?.roles.includes('ROLE_ADMIN') ?? false;
   const [data, setData] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +38,10 @@ export function DashboardPage() {
       window.clearInterval(interval);
     };
   }, []);
+
+  if (!isAdmin) {
+    return <Navigate to="/meus-emprestimos" replace />;
+  }
 
   if (loading) {
     return (
