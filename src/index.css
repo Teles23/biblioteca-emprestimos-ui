@@ -214,10 +214,64 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .user-role {
   font-size: 10px;
   color: var(--sidebar-text);
+}
+.user-menu {
+  position: relative;
+}
+.user-menu-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--sidebar-text);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.user-menu-toggle:hover {
+  color: #fff;
+}
+.user-menu-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 6px);
+  background: #11131a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+.user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--sidebar-text);
+  text-align: left;
+  transition: all 0.15s;
+}
+.user-menu-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.user-menu-item .icon {
+  width: 16px;
+  text-align: center;
 }
 
 /* ── HEADER ── */
