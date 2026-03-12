@@ -6,8 +6,13 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Recebe a URL da API como build argument (necessário pois Vite embute no bundle em compile-time)
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY . .
 RUN npm run build
+
 
 # Production stage
 FROM nginx:stable-alpine
