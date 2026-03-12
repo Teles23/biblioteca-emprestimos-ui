@@ -23,7 +23,7 @@ export function RegisterPage() {
     try {
       setLoading(true);
       setError(null);
-      await registerUser(data);
+      await registerUser({ name: data.name, email: data.email, password: data.password });
       navigate('/login');
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Erro ao realizar cadastro.'));
@@ -79,6 +79,12 @@ export function RegisterPage() {
               <label>Senha</label>
               <input {...register('password')} type="password" placeholder="••••••••" className={errors.password ? 'border-danger' : ''} />
               {errors.password && <span className="text-[11px] text-danger">{errors.password.message}</span>}
+            </div>
+
+            <div className="form-group">
+              <label>Confirmar senha</label>
+              <input {...register('confirmPassword')} type="password" placeholder="••••••••" className={errors.confirmPassword ? 'border-danger' : ''} />
+              {errors.confirmPassword && <span className="text-[11px] text-danger">{errors.confirmPassword.message}</span>}
             </div>
 
             {error && <div className="bg-danger-soft border border-danger/20 text-danger p-3 rounded-sm text-[12px] font-medium">{error}</div>}
