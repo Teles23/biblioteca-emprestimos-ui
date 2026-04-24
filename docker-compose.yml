@@ -6,7 +6,7 @@ services:
     container_name: libramanager_db_init
     restart: "no"
     env_file:
-      - .env
+      - ../biblioteca-emprestimos-api/.env
     command: >
       sh -c "
         export PGPASSWORD=\"$$SHARED_POSTGRES_PASSWORD\";
@@ -23,11 +23,14 @@ services:
   # Serviço da API (Backend)
   backend:
     build:
-      context: ./biblioteca-emprestimos-api
+      context: ../biblioteca-emprestimos-api
       dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+        - DIRECT_URL=${DIRECT_URL}
     container_name: libramanager-api
     env_file:
-      - ./biblioteca-emprestimos-api/.env
+      - ../biblioteca-emprestimos-api/.env
     restart: unless-stopped
     ports:
       - "3333:3333"
@@ -38,19 +41,19 @@ services:
       - libramanager-network
       - devportfolio_default
     volumes:
-      - ./biblioteca-emprestimos-api:/usr/app
+      - ../biblioteca-emprestimos-api:/usr/app
       - /usr/app/node_modules
 
   # Serviço da UI (Frontend)
   frontend:
     build:
-      context: ./biblioteca-emprestimos-ui
+      context: .
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:3333}
     container_name: libramanager-ui
     ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://localhost:3333
+      - "5173:80"
     depends_on:
       - backend
     networks:
