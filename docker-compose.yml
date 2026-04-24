@@ -1,23 +1,42 @@
 version: '3.8'
 
 services:
+  db-init:
+    image: postgres:15-alpine
+    container_name: libramanager_db_init
+    restart: "no"
+    env_file:
+      - .env
+    command: >
+      sh -c "
+        export PGPASSWORD=\"$$SHARED_POSTGRES_PASSWORD\";
+        until pg_isready -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\"; do
+          sleep 2;
+        done;
+        if ! psql -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\" -d postgres -tAc \"SELECT 1 FROM pg_database WHERE datname = '$$APP_POSTGRES_DB'\" | grep -q 1; then
+          psql -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\" -d postgres -v ON_ERROR_STOP=1 -c \"CREATE DATABASE \\\"$$APP_POSTGRES_DB\\\"\";
+        fi
+      "
+    networks:
+      - devportfolio_default
+
   # Serviço da API (Backend)
   backend:
     build:
       context: ./biblioteca-emprestimos-api
       dockerfile: Dockerfile
     container_name: libramanager-api
+    env_file:
+      - ./biblioteca-emprestimos-api/.env
+    restart: unless-stopped
     ports:
       - "3333:3333"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/libramanager?schema=public
-      - JWT_SECRET=seu-segredo-super-secreto-aqui # Mova para um arquivo .env na raiz do backend
-      - PORT=3333
     depends_on:
-      db:
-        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     networks:
       - libramanager-network
+      - devportfolio_default
     volumes:
       - ./biblioteca-emprestimos-api:/usr/app
       - /usr/app/node_modules
@@ -40,30 +59,8 @@ services:
       - ./biblioteca-emprestimos-ui:/app
       - /app/node_modules
 
-  # Serviço do Banco de Dados (PostgreSQL)
-  db:
-    image: postgres:15-alpine
-    container_name: libramanager-db
-    ports:
-      - "5440:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=libramanager
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - libramanager-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d libramanager" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
 networks:
   libramanager-network:
     driver: bridge
-
-volumes:
-  postgres_data:
-    driver: local
+  devportfolio_default:
+    external: true
