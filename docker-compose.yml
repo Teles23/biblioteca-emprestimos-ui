@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db-init:
     image: postgres:15-alpine
@@ -11,23 +9,23 @@ services:
       sh -c "
         export PGPASSWORD=\"$$SHARED_POSTGRES_PASSWORD\";
         until pg_isready -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\"; do
+          echo 'Waiting for database...';
           sleep 2;
         done;
         if ! psql -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\" -d postgres -tAc \"SELECT 1 FROM pg_database WHERE datname = '$$APP_POSTGRES_DB'\" | grep -q 1; then
+          echo 'Creating database...';
           psql -h \"$$SHARED_POSTGRES_HOST\" -p \"$$SHARED_POSTGRES_PORT\" -U \"$$SHARED_POSTGRES_USER\" -d postgres -v ON_ERROR_STOP=1 -c \"CREATE DATABASE \\\"$$APP_POSTGRES_DB\\\"\";
+        else
+          echo 'Database already exists';
         fi
       "
     networks:
-      - devportfolio_default
+      - shared
 
-  # Serviço da API (Backend)
   backend:
     build:
       context: ../biblioteca-emprestimos-api
       dockerfile: Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-        - DIRECT_URL=${DIRECT_URL}
     container_name: libramanager-api
     env_file:
       - ../biblioteca-emprestimos-api/.env
@@ -39,31 +37,26 @@ services:
         condition: service_completed_successfully
     networks:
       - libramanager-network
-      - devportfolio_default
-    volumes:
-      - ../biblioteca-emprestimos-api:/usr/app
-      - /usr/app/node_modules
+      - shared
 
-  # Serviço da UI (Frontend)
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=${VITE_API_URL:-http://localhost:3333}
+         VITE_API_URL: http://86.48.22.174:3333
     container_name: libramanager-ui
+    restart: unless-stopped
     ports:
       - "5173:80"
     depends_on:
       - backend
     networks:
       - libramanager-network
-    volumes:
-      - ./biblioteca-emprestimos-ui:/app
-      - /app/node_modules
 
 networks:
   libramanager-network:
     driver: bridge
-  devportfolio_default:
+
+  shared:
     external: true
